@@ -1,0 +1,6 @@
+.git
+.github
+.vscode
+build
+node_modules
+jest.config.*
