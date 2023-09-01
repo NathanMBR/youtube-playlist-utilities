@@ -1,4 +1,4 @@
-export type Thumbnail = {
+export type VideoThumbnail = {
   url: string;
   width: number;
   height: number;
@@ -14,11 +14,11 @@ export type Video = {
     title: string;
     description: string;
     thumbnails: {
-      default: Thumbnail;
-      medium: Thumbnail;
-      high: Thumbnail;
-      standard: Thumbnail;
-      maxres: Thumbnail;
+      default: VideoThumbnail;
+      medium: VideoThumbnail;
+      high: VideoThumbnail;
+      standard: VideoThumbnail;
+      maxres: VideoThumbnail;
     };
     channelTitle: string;
     playlistId: string;
