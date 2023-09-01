@@ -138,6 +138,7 @@
     "no-mixed-spaces-and-tabs": "off",
     "no-promise-executor-return": "off",
     "react/react-in-jsx-scope": "off",
+    "no-extra-boolean-cast": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/indent": [
