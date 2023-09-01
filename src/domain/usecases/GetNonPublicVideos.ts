@@ -5,9 +5,10 @@ export namespace GetNonPublicVideos {
     playlistURL: string;
   };
 
-  export type Response = Array<Video>;
+  type NonPublicVideos = Array<Video>;
+  export type Response = Promise<NonPublicVideos>;
 }
 
 export interface GetNonPublicVideos {
-  execute(request: GetNonPublicVideos.Request): Promise<GetNonPublicVideos.Response>;
+  execute(request: GetNonPublicVideos.Request): GetNonPublicVideos.Response;
 }
