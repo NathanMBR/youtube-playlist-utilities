@@ -6,7 +6,20 @@ export namespace GetNonPublicVideos {
   };
 
   type NonPublicVideos = Array<Video>;
-  export type Response = Promise<NonPublicVideos>;
+
+  type SuccessResponse = {
+    success: true;
+    data: NonPublicVideos;
+  }
+
+  type FailureResponseErrors = "INVALID_PLAYLIST_URL";
+
+  type FailureResponse = {
+    success: false;
+    error: FailureResponseErrors;
+  };
+
+  export type Response = Promise<SuccessResponse | FailureResponse>;
 }
 
 export interface GetNonPublicVideos {
