@@ -16,6 +16,8 @@
   },
   "scripts": {
     "dev": "vite",
+    "lint": "tsc --noEmit && eslint --fix",
+    "lint:ci": "tsc --noEmit && eslint",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest --coverage.enabled",
