@@ -1,16 +1,11 @@
-import {
-  DataPagination,
-  DataVideo
-} from "@/data/models";
+import { DataVideo } from "@/data/models";
 
 export namespace GetPlaylistVideosRepository {
   export type Request = {
     playlistId: string;
-    pageToken?: string;
   };
 
-  type PaginatedVideos = DataPagination<DataVideo>;
-  export type Response = Promise<PaginatedVideos>;
+  export type Response = Promise<Array<DataVideo>>;
 }
 
 export interface GetPlaylistVideosRepository {
