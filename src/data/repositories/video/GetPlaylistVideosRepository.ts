@@ -14,9 +14,9 @@ export namespace GetPlaylistVideosRepository {
     "INVALID_PLAYLIST" |
     "FORBIDDEN_PLAYLIST" |
     "PLAYLIST_NOT_FOUND" |
-    "INVALID_FETCH_URL" |
+    "INVALID_PLAYLIST_URL" |
     "NON_JSON_RESPONSE_BODY" |
-    "UNKNOWN_ERROR";
+    "UNKNOWN";
 
   type FailureResponse = {
     success: false;
