@@ -11,58 +11,61 @@ import { GetNonPublicVideosImpl } from "./GetNonPublicVideosImpl";
 const getSUTEnvironment = () => {
   class GetPlaylistVideosRepositoryStub implements GetPlaylistVideosRepository {
     async get(): GetPlaylistVideosRepository.Response {
-      return [
-        {
-          kind: "test-video-kind",
-          etag: "test-video-etag",
-          id: "test-video-id",
-          snippet: {
-            publishedAt: "test-video-published-at",
-            channelId: "test-video-channel-id",
-            title: "test-video-title",
-            description: "test-video-description",
-            thumbnails: {
-              default: {
-                url: "test-video-thumbnail-default-url",
-                width: 120,
-                height: 90
+      return {
+        success: true,
+        data: [
+          {
+            kind: "test-video-kind",
+            etag: "test-video-etag",
+            id: "test-video-id",
+            snippet: {
+              publishedAt: "test-video-published-at",
+              channelId: "test-video-channel-id",
+              title: "test-video-title",
+              description: "test-video-description",
+              thumbnails: {
+                default: {
+                  url: "test-video-thumbnail-default-url",
+                  width: 120,
+                  height: 90
+                },
+                medium: {
+                  url: "test-video-thumbnail-medium-url",
+                  width: 320,
+                  height: 180
+                },
+                high: {
+                  url: "test-video-thumbnail-high-url",
+                  width: 480,
+                  height: 360
+                },
+                standard: {
+                  url: "test-video-thumbnail-standard-url",
+                  width: 640,
+                  height: 480
+                },
+                maxres: {
+                  url: "test-video-thumbnail-maxres-url",
+                  width: 1280,
+                  height: 720
+                }
               },
-              medium: {
-                url: "test-video-thumbnail-medium-url",
-                width: 320,
-                height: 180
+              channelTitle: "test-video-channel-title",
+              playlistId: "test-video-playlist-id",
+              position: 1,
+              resourceId: {
+                kind: "test-video-resource-id-kind",
+                videoId: "test-video-resource-id-video-id"
               },
-              high: {
-                url: "test-video-thumbnail-high-url",
-                width: 480,
-                height: 360
-              },
-              standard: {
-                url: "test-video-thumbnail-standard-url",
-                width: 640,
-                height: 480
-              },
-              maxres: {
-                url: "test-video-thumbnail-maxres-url",
-                width: 1280,
-                height: 720
-              }
+              videoOwnerChannelTitle: "test-video-video-owner-channel-title",
+              videoOwnerChannelId: "test-video-video-owner-channel-id"
             },
-            channelTitle: "test-video-channel-title",
-            playlistId: "test-video-playlist-id",
-            position: 1,
-            resourceId: {
-              kind: "test-video-resource-id-kind",
-              videoId: "test-video-resource-id-video-id"
-            },
-            videoOwnerChannelTitle: "test-video-video-owner-channel-title",
-            videoOwnerChannelId: "test-video-video-owner-channel-id"
-          },
-          status: {
-            privacyStatus: "test-video-status-privacy-status"
+            status: {
+              privacyStatus: "test-video-status-privacy-status"
+            }
           }
-        }
-      ];
+        ]
+      };
     }
   }
 
@@ -175,6 +178,32 @@ describe("GetNonPublicVideosImpl", () => {
     const expectedResponse = {
       success: false,
       error: "INVALID_PLAYLIST_URL"
+    };
+
+    expect(SUTResponse).toEqual(expectedResponse);
+  });
+
+  it("should return REPOSITORY_FAILED error when video success returns false", async () => {
+    const { SUT, getPlaylistVideosRepository } = getSUTEnvironment();
+
+    vi.spyOn(getPlaylistVideosRepository, "get").mockReturnValueOnce(
+      Promise.resolve(
+        {
+          success: false,
+          error: "UNKNOWN_ERROR"
+        }
+      )
+    );
+
+    const SUTRequest = {
+      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+    };
+
+    const SUTResponse = await SUT.execute(SUTRequest);
+
+    const expectedResponse = {
+      success: false,
+      error: "REPOSITORY_FAILED"
     };
 
     expect(SUTResponse).toEqual(expectedResponse);
