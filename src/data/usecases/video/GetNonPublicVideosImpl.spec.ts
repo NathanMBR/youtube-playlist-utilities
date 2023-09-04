@@ -190,7 +190,7 @@ describe("GetNonPublicVideosImpl", () => {
       Promise.resolve(
         {
           success: false,
-          error: "UNKNOWN_ERROR"
+          error: "UNKNOWN"
         }
       )
     );
