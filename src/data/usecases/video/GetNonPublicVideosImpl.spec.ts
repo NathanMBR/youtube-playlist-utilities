@@ -5,10 +5,22 @@ import {
   vi
 } from "vitest";
 
+import { GetNonPublicVideosValidator } from "@/data/validators";
 import { GetPlaylistVideosRepository } from "@/data/repositories";
 import { GetNonPublicVideosImpl } from "./GetNonPublicVideosImpl";
 
 const getSUTEnvironment = () => {
+  class GetNonPublicVideosValidatorStub implements GetNonPublicVideosValidator {
+    validate(): GetNonPublicVideosValidator.Response {
+      return {
+        success: true,
+        data: {
+          playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+        }
+      };
+    }
+  }
+
   class GetPlaylistVideosRepositoryStub implements GetPlaylistVideosRepository {
     async get(): GetPlaylistVideosRepository.Response {
       return {
@@ -69,11 +81,18 @@ const getSUTEnvironment = () => {
     }
   }
 
+  const getNonPublicVideosValidator = new GetNonPublicVideosValidatorStub();
+
   const getPlaylistVideosRepository = new GetPlaylistVideosRepositoryStub();
 
-  const SUT = new GetNonPublicVideosImpl(getPlaylistVideosRepository);
+  const SUT = new GetNonPublicVideosImpl(
+    getNonPublicVideosValidator,
+    getPlaylistVideosRepository
+  );
 
   return {
+    getNonPublicVideosValidator,
+
     getPlaylistVideosRepository,
 
     SUT
@@ -149,8 +168,43 @@ describe("GetNonPublicVideosImpl", () => {
     expect(SUTResponse).toEqual(expectedResponse);
   });
 
+  it("should return VALIDATION_FAILED error when getNonPublicVideosValidator returns error", async () => {
+    const { SUT, getNonPublicVideosValidator } = getSUTEnvironment();
+
+    vi.spyOn(getNonPublicVideosValidator, "validate").mockReturnValueOnce(
+      {
+        success: false,
+        errors: [
+          "Test error"
+        ]
+      }
+    );
+
+    const SUTRequest = {
+      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+    };
+
+    const SUTResponse = await SUT.execute(SUTRequest);
+
+    const expectedResponse = {
+      success: false,
+      error: "VALIDATION_FAILED"
+    };
+
+    expect(SUTResponse).toEqual(expectedResponse);
+  });
+
   it("should return INVALID_PLAYLIST_URL error when playlistURL doesn't have the list query parameter", async () => {
-    const { SUT } = getSUTEnvironment();
+    const { SUT, getNonPublicVideosValidator } = getSUTEnvironment();
+
+    vi.spyOn(getNonPublicVideosValidator, "validate").mockReturnValueOnce(
+      {
+        success: true,
+        data: {
+          playlistURL: "url.test/playlist-id?telemetry=false"
+        }
+      }
+    );
 
     const SUTRequest = {
       playlistURL: "url.test/playlist-id?telemetry=false"
@@ -167,7 +221,16 @@ describe("GetNonPublicVideosImpl", () => {
   });
 
   it("should return INVALID_PLAYLIST_URL error when playlistURL list query parameter is empty", async () => {
-    const { SUT } = getSUTEnvironment();
+    const { SUT, getNonPublicVideosValidator } = getSUTEnvironment();
+
+    vi.spyOn(getNonPublicVideosValidator, "validate").mockReturnValueOnce(
+      {
+        success: true,
+        data: {
+          playlistURL: "url.test/playlist-id?list=&telemetry=false"
+        }
+      }
+    );
 
     const SUTRequest = {
       playlistURL: "url.test/playlist-id?list=&telemetry=false"
@@ -183,7 +246,7 @@ describe("GetNonPublicVideosImpl", () => {
     expect(SUTResponse).toEqual(expectedResponse);
   });
 
-  it("should return REPOSITORY_FAILED error when video success returns false", async () => {
+  it("should return REPOSITORY_FAILED error when getPlaylistVideosRepository returns error", async () => {
     const { SUT, getPlaylistVideosRepository } = getSUTEnvironment();
 
     vi.spyOn(getPlaylistVideosRepository, "get").mockReturnValueOnce(
@@ -209,7 +272,25 @@ describe("GetNonPublicVideosImpl", () => {
     expect(SUTResponse).toEqual(expectedResponse);
   });
 
-  it("should pass playlist id to getPlaylistVideosRepository call", async () => {
+  it("should pass playlistId to getNonPublicVideosValidator call", async () => {
+    const { SUT, getNonPublicVideosValidator } = getSUTEnvironment();
+
+    const validateSpy = vi.spyOn(getNonPublicVideosValidator, "validate");
+
+    const SUTRequest = {
+      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+    };
+
+    await SUT.execute(SUTRequest);
+
+    const expectedCall = {
+      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+    };
+
+    expect(validateSpy).toHaveBeenCalledWith(expectedCall);
+  });
+
+  it("should pass playlistId to getPlaylistVideosRepository call", async () => {
     const { SUT, getPlaylistVideosRepository } = getSUTEnvironment();
 
     const getSpy = vi.spyOn(getPlaylistVideosRepository, "get");
@@ -225,6 +306,24 @@ describe("GetNonPublicVideosImpl", () => {
     };
 
     expect(getSpy).toHaveBeenCalledWith(expectedCall);
+  });
+
+  it("should repass getNonPublicVideosValidator errors to upper level", async () => {
+    const { SUT, getNonPublicVideosValidator } = getSUTEnvironment();
+
+    vi.spyOn(getNonPublicVideosValidator, "validate").mockImplementationOnce(
+      () => {
+        throw new Error("Test error");
+      }
+    );
+
+    const SUTRequest = {
+      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+    };
+
+    const SUTResponse = SUT.execute(SUTRequest);
+
+    await expect(SUTResponse).rejects.toThrow();
   });
 
   it("should repass getPlaylistVideosRepository errors to upper level", async () => {
