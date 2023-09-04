@@ -29,7 +29,13 @@ export class GetNonPublicVideosImpl implements GetNonPublicVideos {
       }
     );
 
-    const nonPublicVideos = videos.filter(video => video.status.privacyStatus !== "public");
+    if (!videos.success)
+      return {
+        success: false,
+        error: "REPOSITORY_FAILED"
+      };
+
+    const nonPublicVideos = videos.data.filter(video => video.status.privacyStatus !== "public");
 
     return {
       success: true,
