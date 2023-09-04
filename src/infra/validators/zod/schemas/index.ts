@@ -1,1 +1,1 @@
-export * from "./zodGetNonPublicVideosSchema";
+export * from "./videos";
