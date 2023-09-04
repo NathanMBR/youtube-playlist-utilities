@@ -12,7 +12,10 @@ export namespace GetNonPublicVideos {
     data: NonPublicVideos;
   }
 
-  type FailureResponseErrors = "INVALID_PLAYLIST_URL" | "REPOSITORY_FAILED";
+  type FailureResponseErrors =
+    "VALIDATION_FAILED" |
+    "INVALID_PLAYLIST_URL" |
+    "REPOSITORY_FAILED";
 
   type FailureResponse = {
     success: false;
