@@ -6,6 +6,7 @@ import { GetPlaylistVideosRepository } from "@/data/repositories";
 
 export class NodeVideosRepository implements GetPlaylistVideosRepository {
   constructor(
+    private readonly youtubePlaylistVideosBaseURL: string,
     private readonly youtubeApiKey: string
   ) {}
 
@@ -20,7 +21,7 @@ export class NodeVideosRepository implements GetPlaylistVideosRepository {
         "status"
       ].join(",");
 
-      const playlistItemsURL = new URL("https://www.googleapis.com/youtube/v3/playlistItems");
+      const playlistItemsURL = new URL(this.youtubePlaylistVideosBaseURL);
       playlistItemsURL.searchParams.set("key", this.youtubeApiKey);
       playlistItemsURL.searchParams.set("playlistId", playlistId);
       playlistItemsURL.searchParams.set("part", playlistItemsURLParts);
