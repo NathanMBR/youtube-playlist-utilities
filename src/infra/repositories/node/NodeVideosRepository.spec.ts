@@ -78,13 +78,16 @@ const mockFetchOnce = () => {
 };
 
 const getSUTEnvironment = () => {
+  const youtubePlaylistVideosBaseURL = "https://test-url.com/test-playlist";
   const youtubeApiKey = "test-key";
 
   const SUT = new NodeVideosRepository(
+    youtubePlaylistVideosBaseURL,
     youtubeApiKey
   );
 
   return {
+    youtubePlaylistVideosBaseURL,
     youtubeApiKey,
 
     SUT
@@ -422,9 +425,13 @@ describe("NodeVideosRepository get()", () => {
   it("should pass playlistItemsURL to fetch call", async () => {
     mockFetchOnce();
 
-    const fetchSpy = vi.spyOn(globalThis, "fetch");
+    const {
+      SUT,
+      youtubePlaylistVideosBaseURL,
+      youtubeApiKey
+    } = getSUTEnvironment();
 
-    const { SUT, youtubeApiKey } = getSUTEnvironment();
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
 
     const SUTRequest = {
       playlistId: "test-playlist-id"
@@ -432,7 +439,7 @@ describe("NodeVideosRepository get()", () => {
 
     await SUT.get(SUTRequest);
 
-    const expectedCall = `https://www.googleapis.com/youtube/v3/playlistItems?key=${youtubeApiKey}&playlistId=${SUTRequest.playlistId}&part=id%2Csnippet%2Cstatus&maxResults=50`;
+    const expectedCall = `${youtubePlaylistVideosBaseURL}?key=${youtubeApiKey}&playlistId=${SUTRequest.playlistId}&part=id%2Csnippet%2Cstatus&maxResults=50`;
 
     expect(fetchSpy).toHaveBeenCalledWith(expectedCall);
   });
