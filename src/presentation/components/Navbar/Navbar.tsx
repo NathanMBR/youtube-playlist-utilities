@@ -92,6 +92,14 @@ export const Navbar = (props: NavbarProps) => {
   const { classes, cx } = useStyles();
   const [active, setActive] = useState("Billing");
 
+  const getLinkClassName = (item: Option) => cx(
+    classes.link,
+
+    {
+      [classes.linkActive]: item.label === active
+    }
+  );
+
   const getLinkOnClickHandler = (item: Option) => {
     const handler = () => {
       setActive(item.label);
@@ -103,16 +111,25 @@ export const Navbar = (props: NavbarProps) => {
   const links = options.map(
     item => (
       <Link
-        className={cx(classes.link, { [classes.linkActive]: item.label === active })}
         to={item.link}
-        onClick={getLinkOnClickHandler(item)}
         key={item.label}
+        className={getLinkClassName(item)}
+        onClick={getLinkOnClickHandler(item)}
       >
-        <item.icon className={classes.linkIcon} stroke={1.5} />
+        <item.icon
+          className={classes.linkIcon}
+          stroke={1.5}
+        />
+
         <span>{item.label}</span>
       </Link>
     )
   );
+
+  const cleanLinkStyle = {
+    color: "inherit",
+    textDecoration: "inherit"
+  };
 
   return (
     <MantineNavbar
@@ -124,7 +141,13 @@ export const Navbar = (props: NavbarProps) => {
           position="apart"
           className={classes.header}
         >
-          <Title size={16}>Youtube Playlist Utilities</Title>
+          <Link
+            to="/"
+            style={cleanLinkStyle}
+          >
+            <Title size={16}>Youtube Playlist Utilities</Title>
+          </Link>
+
           <Code sx={{ fontWeight: 700 }}>{version}</Code>
         </Group>
 
