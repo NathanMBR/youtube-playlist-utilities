@@ -1,0 +1,141 @@
+import {
+  Navbar as MantineNavbar,
+  createStyles,
+  Group,
+  Code,
+  getStylesRef,
+  rem,
+  Title
+} from "@mantine/core";
+import { Icon } from "@tabler/icons-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+
+import { ThemeSwitch } from "./ThemeSwitch";
+
+const useStyles = createStyles(
+  theme => {
+    return {
+      header: {
+        paddingBottom: theme.spacing.md,
+        marginBottom: `calc(${theme.spacing.md} * 1.5)`,
+        borderBottom: `${rem(1)} solid ${
+          theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]
+        }`
+      },
+
+      footer: {
+        paddingTop: theme.spacing.md,
+        marginTop: theme.spacing.md,
+        borderTop: `${rem(1)} solid ${
+          theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]
+        }`
+      },
+
+      link: {
+        ...theme.fn.focusStyles(),
+        display: "flex",
+        alignItems: "center",
+        textDecoration: "none",
+        fontSize: theme.fontSizes.sm,
+        color: theme.colorScheme === "dark" ? theme.colors.dark[1] : theme.colors.gray[7],
+        padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
+        borderRadius: theme.radius.sm,
+        fontWeight: 500,
+
+        "&:hover": {
+          backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
+          color: theme.colorScheme === "dark" ? theme.white : theme.black,
+
+          [`& .${getStylesRef("icon")}`]: {
+            color: theme.colorScheme === "dark" ? theme.white : theme.black
+          }
+        }
+      },
+
+      linkIcon: {
+        ref: getStylesRef("icon"),
+        color: theme.colorScheme === "dark" ? theme.colors.dark[2] : theme.colors.gray[6],
+        marginRight: theme.spacing.sm
+      },
+
+      linkActive: {
+        "&, &:hover": {
+          backgroundColor: theme.fn.variant({ variant: "light", color: theme.primaryColor }).background,
+          color: theme.fn.variant({ variant: "light", color: theme.primaryColor }).color,
+          [`& .${getStylesRef("icon")}`]: {
+            color: theme.fn.variant({ variant: "light", color: theme.primaryColor }).color
+          }
+        }
+      }
+    };
+  }
+);
+
+type Option = {
+  link: string;
+  label: string;
+  icon: Icon;
+}
+
+export type NavbarProps = {
+  version: string;
+  options: Array<Option>;
+}
+
+export const Navbar = (props: NavbarProps) => {
+  const {
+    version,
+    options
+  } = props;
+
+  const { classes, cx } = useStyles();
+  const [active, setActive] = useState("Billing");
+
+  const getLinkOnClickHandler = (item: Option) => {
+    const handler = () => {
+      setActive(item.label);
+    };
+
+    return handler;
+  };
+
+  const links = options.map(
+    item => (
+      <Link
+        className={cx(classes.link, { [classes.linkActive]: item.label === active })}
+        to={item.link}
+        onClick={getLinkOnClickHandler(item)}
+        key={item.label}
+      >
+        <item.icon className={classes.linkIcon} stroke={1.5} />
+        <span>{item.label}</span>
+      </Link>
+    )
+  );
+
+  return (
+    <MantineNavbar
+      p="md"
+      width={{ sm: 300 }}
+    >
+      <MantineNavbar.Section grow>
+        <Group
+          position="apart"
+          className={classes.header}
+        >
+          <Title size={16}>Youtube Playlist Utilities</Title>
+          <Code sx={{ fontWeight: 700 }}>{version}</Code>
+        </Group>
+
+        {
+          links
+        }
+      </MantineNavbar.Section>
+
+      <MantineNavbar.Section>
+        <ThemeSwitch />
+      </MantineNavbar.Section>
+    </MantineNavbar>
+  );
+};
