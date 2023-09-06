@@ -1,6 +1,6 @@
 import {
   IconEyeOff,
-  IconSettings
+  IconBrandGoogle
 } from "@tabler/icons-react";
 import { AppShell } from "@mantine/core";
 import { ReactNode } from "react";
@@ -23,15 +23,15 @@ export const BaseLayout = (props: BaseLayoutProps) => {
 
   const options: NavbarProps["options"] = [
     {
-      label: "Get Non-public videos of a playlist",
-      link: "/non-public-videos",
+      label: "Check a playlist for unavailable videos",
+      link: "/playlist/unavailable",
       icon: IconEyeOff
     },
 
     {
-      label: "Set Google Token",
-      link: "/token",
-      icon: IconSettings
+      label: "Authenticate with Google",
+      link: "/auth",
+      icon: IconBrandGoogle
     }
   ];
 
