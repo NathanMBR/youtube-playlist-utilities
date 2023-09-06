@@ -11,10 +11,16 @@ import {
 } from "@/presentation/components";
 
 export type BaseLayoutProps = {
+  className?: string;
   children: ReactNode;
 };
 
 export const BaseLayout = (props: BaseLayoutProps) => {
+  const {
+    className,
+    children
+  } = props;
+
   const options: NavbarProps["options"] = [
     {
       label: "Get Non-public videos of a playlist",
@@ -35,8 +41,11 @@ export const BaseLayout = (props: BaseLayoutProps) => {
   />;
 
   return (
-    <AppShell navbar={navbar} >
-      { props.children }
+    <AppShell
+      navbar={navbar}
+      className={className}
+    >
+      { children }
     </AppShell>
   );
 };
