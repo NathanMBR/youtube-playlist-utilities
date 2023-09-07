@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "node:path";
 
 export const viteConfig: UserConfig = {
+  envDir: path.resolve(__dirname),
   root: "./src/main/vite",
   plugins: [react()],
   resolve: {
