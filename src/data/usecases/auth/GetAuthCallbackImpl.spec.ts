@@ -5,12 +5,12 @@ import {
   vi
 } from "vitest";
 
-import { GetAuthCallbackRepository } from "@/data/repositories";
+import { GetAuthCallbackCacheRepository } from "@/data/repositories";
 import { GetAuthCallbackImpl } from "./GetAuthCallbackImpl";
 
 const getSUTEnvironment = () => {
-  class GetAuthCallbackRepositoryStub implements GetAuthCallbackRepository {
-    get(): GetAuthCallbackRepository.Response {
+  class GetAuthCallbackRepositoryStub implements GetAuthCallbackCacheRepository {
+    get(): GetAuthCallbackCacheRepository.Response {
       return {
         accessToken: "test-access-token",
         tokenType: "test-token-type",
@@ -20,13 +20,14 @@ const getSUTEnvironment = () => {
     }
   }
 
-  const getAuthCallbackRepositoryStub = new GetAuthCallbackRepositoryStub();
+  const getAuthCallbackCacheRepository = new GetAuthCallbackRepositoryStub();
 
-  const SUT = new GetAuthCallbackImpl(getAuthCallbackRepositoryStub);
+  const SUT = new GetAuthCallbackImpl(getAuthCallbackCacheRepository);
 
   return {
-    SUT,
-    getAuthCallbackRepositoryStub
+    getAuthCallbackCacheRepository,
+
+    SUT
   };
 };
 
@@ -46,26 +47,36 @@ describe("GetAuthCallbackImpl", () => {
     expect(SUTResponse).toEqual(expectedResponse);
   });
 
-  it("should call getAuthCallbackRepository", () => {
-    const { SUT, getAuthCallbackRepositoryStub } = getSUTEnvironment();
+  it("should return null if getAuthCallbackCacheRepository returns null", () => {
+    const { SUT, getAuthCallbackCacheRepository } = getSUTEnvironment();
 
-    const getSpy = vi.spyOn(getAuthCallbackRepositoryStub, "get");
+    vi.spyOn(getAuthCallbackCacheRepository, "get").mockReturnValueOnce(null);
+
+    const SUTResponse = SUT.execute();
+
+    expect(SUTResponse).toBeNull();
+  });
+
+  it("should call getAuthCallbackCacheRepository", () => {
+    const { SUT, getAuthCallbackCacheRepository } = getSUTEnvironment();
+
+    const getSpy = vi.spyOn(getAuthCallbackCacheRepository, "get");
 
     SUT.execute();
 
     expect(getSpy).toHaveBeenCalled();
   });
 
-  it("should repass getAuthCallbackRepository errors to upper level", () => {
-    const { SUT, getAuthCallbackRepositoryStub } = getSUTEnvironment();
+  it("should repass getAuthCallbackCacheRepository errors to upper level", () => {
+    const { SUT, getAuthCallbackCacheRepository } = getSUTEnvironment();
 
-    vi.spyOn(getAuthCallbackRepositoryStub, "get").mockImplementationOnce(
+    vi.spyOn(getAuthCallbackCacheRepository, "get").mockImplementationOnce(
       () => {
         throw new Error("Test error");
       }
     );
 
-    const getSUTResponse = SUT.execute;
+    const getSUTResponse = () => SUT.execute();
 
     expect(getSUTResponse).toThrow();
   });
