@@ -3,7 +3,7 @@ import { DataAuthCallback } from "@/data/models";
 export namespace SetAuthCallbackCacheRepository {
   export type Request = DataAuthCallback;
 
-  export type Response = void;
+  export type Response = boolean;
 }
 
 export interface SetAuthCallbackCacheRepository {
