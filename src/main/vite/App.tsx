@@ -1,14 +1,13 @@
-
-import { RouterProvider } from "react-router-dom";
-
-import { routes } from "./routes";
-import { MantineThemeProvider } from "./providers";
+import {
+  MantineThemeProvider,
+  ReactRouterDOMProvider
+} from "./providers";
 
 export const App = () => {
   return (
     <>
       <MantineThemeProvider>
-        <RouterProvider router={routes} />
+        <ReactRouterDOMProvider />
       </MantineThemeProvider>
     </>
   );
