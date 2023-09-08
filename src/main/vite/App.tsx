@@ -4,6 +4,9 @@ import {
   ColorScheme
 } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
+import { RouterProvider } from "react-router-dom";
+
+import { routes } from "./routes";
 
 export const App = () => {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>(
@@ -27,9 +30,7 @@ export const App = () => {
           withGlobalStyles
           withNormalizeCSS
         >
-          <h1>YouTube Playlist Utilities</h1>
-          <p>Under construction...</p>
-          <button onClick={() => toggleColorScheme()}>Toggle theme</button>
+          <RouterProvider router={routes} />
         </MantineProvider>
       </ColorSchemeProvider>
     </>
