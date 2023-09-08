@@ -1,8 +1,12 @@
 import { RouteObject } from "react-router-dom";
 
-import { makeHomePage } from "../factories";
+import {
+  makeHomePage,
+  makeNotFoundPage
+} from "../factories";
 
 export const homeRoute: RouteObject = {
   path: "/",
-  element: makeHomePage()
+  element: makeHomePage(),
+  errorElement: makeNotFoundPage()
 };
