@@ -102,3 +102,74 @@ describe("NodeAuthCallbackCacheRepository get()", () => {
     expect(SUTResponse).toBeNull();
   });
 });
+
+describe("NodeAuthCallbackCacheRepository set()", () => {
+  it("should successfully set AuthCallback", () => {
+    const { SUT } = getSUTEnvironment();
+
+    const SUTResponse = SUT.set(mockedAuthCallback);
+
+    const expectedResponse = true;
+
+    expect(SUTResponse).toBe(expectedResponse);
+  });
+
+  it("should pass AuthCallback to JSON.stringify()", () => {
+    const { SUT } = getSUTEnvironment();
+
+    const stringifySpy = vi.spyOn(JSON, "stringify");
+
+    SUT.set(mockedAuthCallback);
+
+    const expectedCall = mockedAuthCallback;
+
+    expect(stringifySpy).toHaveBeenCalledWith(expectedCall);
+  });
+
+  it("should pass AuthCallback string to localStorage.setItem()", () => {
+    const { SUT } = getSUTEnvironment();
+
+    const setItemSpy = vi.spyOn(localStorage, "setItem");
+
+    SUT.set(mockedAuthCallback);
+
+    const expectedCall = [
+      "auth-callback",
+      JSON.stringify(mockedAuthCallback)
+    ];
+
+    expect(setItemSpy).toHaveBeenCalledWith(...expectedCall);
+  });
+
+  it("should return false if JSON.stringify() throws", () => {
+    const { SUT } = getSUTEnvironment();
+
+    vi.spyOn(JSON, "stringify").mockImplementationOnce(
+      () => {
+        throw new Error("Test error");
+      }
+    );
+
+    const SUTResponse = SUT.set(mockedAuthCallback);
+
+    const expectedResponse = false;
+
+    expect(SUTResponse).toBe(expectedResponse);
+  });
+
+  it("should return false if localStorage.setItem() throws", () => {
+    const { SUT } = getSUTEnvironment();
+
+    vi.spyOn(localStorage, "setItem").mockImplementationOnce(
+      () => {
+        throw new Error("Test error");
+      }
+    );
+
+    const SUTResponse = SUT.set(mockedAuthCallback);
+
+    const expectedResponse = false;
+
+    expect(SUTResponse).toBe(expectedResponse);
+  });
+});
