@@ -21,10 +21,13 @@ export class NodeAuthCallbackRepository implements GetAuthCallbackRepository {
     if (!scope)
       return null;
 
+    const oneSecondToMilliseconds = 1000;
+    const expiresAt = new Date(Date.now() + expiresIn * oneSecondToMilliseconds);
+
     const authCallback: GetAuthCallbackRepository.Response = {
       accessToken,
       tokenType,
-      expiresIn,
+      expiresAt,
       scope
     };
 
