@@ -9,7 +9,7 @@ import { GetAuthCallbackCacheRepository } from "@/data/repositories";
 import { GetAuthCallbackImpl } from "./GetAuthCallbackImpl";
 
 const getSUTEnvironment = () => {
-  class GetAuthCallbackRepositoryStub implements GetAuthCallbackCacheRepository {
+  class GetAuthCallbackCacheRepositoryStub implements GetAuthCallbackCacheRepository {
     get(): GetAuthCallbackCacheRepository.Response {
       return {
         accessToken: "test-access-token",
@@ -20,7 +20,7 @@ const getSUTEnvironment = () => {
     }
   }
 
-  const getAuthCallbackCacheRepository = new GetAuthCallbackRepositoryStub();
+  const getAuthCallbackCacheRepository = new GetAuthCallbackCacheRepositoryStub();
 
   const SUT = new GetAuthCallbackImpl(getAuthCallbackCacheRepository);
 
