@@ -11,13 +11,15 @@ import {
 } from "@/data/repositories";
 import { SetAuthCallbackImpl } from "./SetAuthCallbackImpl";
 
+const globalDate = new Date();
+
 const getSUTEnvironment = () => {
   class GetAuthCallbackRepositoryStub implements GetAuthCallbackRepository {
     get(): GetAuthCallbackRepository.Response {
       return {
         accessToken: "test-access-token",
         tokenType: "test-token-type",
-        expiresIn: 123456789,
+        expiresAt: globalDate,
         scope: "test-scope"
       };
     }
@@ -100,7 +102,7 @@ describe("SetAuthCallbackImpl", () => {
     const expectedCall = {
       accessToken: "test-access-token",
       tokenType: "test-token-type",
-      expiresIn: 123456789,
+      expiresAt: globalDate,
       scope: "test-scope"
     };
 
