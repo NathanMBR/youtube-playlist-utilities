@@ -1,11 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 
+import {
+  authRoute,
+  authCallbackRoute
+} from "./authRoute";
 import { homeRoute } from "./homeRoute";
-import { authRoute } from "./authRoute";
 
 export const router = createBrowserRouter(
   [
     homeRoute,
-    authRoute
+    authRoute,
+    authCallbackRoute
   ]
 );
