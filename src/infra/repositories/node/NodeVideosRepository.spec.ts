@@ -167,6 +167,9 @@ describe("NodeVideosRepository get()", () => {
 
   it("should repeat search if pageToken is defined", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+    fetchSpy.mockReset();
+
     fetchSpy.mockImplementationOnce(
       () => Promise.resolve(
         {
