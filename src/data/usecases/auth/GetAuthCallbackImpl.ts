@@ -9,6 +9,13 @@ export class GetAuthCallbackImpl implements GetAuthCallback {
   execute(): GetAuthCallback.Response {
     const authCallback = this.getAuthCallbackCacheRepository.get();
 
+    if (!authCallback)
+      return null;
+
+    const isAuthCallbackExpired = authCallback.expiresAt.getTime() <= Date.now();
+    if (isAuthCallbackExpired)
+      return null;
+
     return authCallback;
   }
 }
