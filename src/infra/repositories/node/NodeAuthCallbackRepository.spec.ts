@@ -2,25 +2,33 @@ import {
   beforeAll,
   describe,
   it,
-  expect
+  expect,
+  vi
 } from "vitest";
 
 import { NodeAuthCallbackRepository } from "./NodeAuthCallbackRepository";
+
+const globalDate = new Date();
+vi.spyOn(Date, "now").mockReturnValue(globalDate.getTime());
 
 const mockWindowLocationHash = (mockQueryParams: string) => {
   window.location.hash = mockQueryParams;
 };
 
 const getSUTEnvironment = () => {
+  const EXPIRES_IN = 3600;
+
   const windowLocationHash = new URLSearchParams("#test_query=test-value");
   windowLocationHash.set("access_token", "test-token");
   windowLocationHash.set("token_type", "Bearer");
-  windowLocationHash.set("expires_in", "3600");
+  windowLocationHash.set("expires_in", String(EXPIRES_IN));
   windowLocationHash.set("scope", "test-scope");
 
   const SUT = new NodeAuthCallbackRepository();
 
   return {
+    EXPIRES_IN,
+
     windowLocationHash: windowLocationHash.toString(),
 
     SUT
@@ -39,15 +47,21 @@ describe("NodeAuthCallbackRepository", () => {
   });
 
   it("should successfully return AuthCallback", () => {
-    const { SUT, windowLocationHash } = getSUTEnvironment();
+    const {
+      SUT,
+      windowLocationHash,
+      EXPIRES_IN
+    } = getSUTEnvironment();
     mockWindowLocationHash(windowLocationHash);
 
     const SUTResponse = SUT.get();
 
+    const oneSecondInMilliseconds = 1000;
+
     const expectedResponse = {
       accessToken: "test-token",
       tokenType: "Bearer",
-      expiresIn: 3600,
+      expiresAt: new Date(globalDate.getTime() + EXPIRES_IN * oneSecondInMilliseconds),
       scope: "test-scope"
     };
 
