@@ -8,13 +8,16 @@ import {
 import { GetAuthCallbackCacheRepository } from "@/data/repositories";
 import { GetAuthCallbackImpl } from "./GetAuthCallbackImpl";
 
+const globalDate = new Date();
+vi.spyOn(Date, "now").mockReturnValue(globalDate.getTime() - 1000);
+
 const getSUTEnvironment = () => {
   class GetAuthCallbackCacheRepositoryStub implements GetAuthCallbackCacheRepository {
     get(): GetAuthCallbackCacheRepository.Response {
       return {
         accessToken: "test-access-token",
         tokenType: "test-token-type",
-        expiresIn: 123456789,
+        expiresAt: globalDate,
         scope: "test-scope"
       };
     }
@@ -40,7 +43,7 @@ describe("GetAuthCallbackImpl", () => {
     const expectedResponse = {
       accessToken: "test-access-token",
       tokenType: "test-token-type",
-      expiresIn: 123456789,
+      expiresAt: globalDate,
       scope: "test-scope"
     };
 
@@ -51,6 +54,23 @@ describe("GetAuthCallbackImpl", () => {
     const { SUT, getAuthCallbackCacheRepository } = getSUTEnvironment();
 
     vi.spyOn(getAuthCallbackCacheRepository, "get").mockReturnValueOnce(null);
+
+    const SUTResponse = SUT.execute();
+
+    expect(SUTResponse).toBeNull();
+  });
+
+  it("should return null if getAuthCallbackCacheRepository response is expired", () => {
+    const { SUT, getAuthCallbackCacheRepository } = getSUTEnvironment();
+
+    vi.spyOn(getAuthCallbackCacheRepository, "get").mockReturnValueOnce(
+      {
+        accessToken: "test-access-token",
+        tokenType: "test-token-type",
+        expiresAt: new Date(0),
+        scope: "test-scope"
+      }
+    );
 
     const SUTResponse = SUT.execute();
 
