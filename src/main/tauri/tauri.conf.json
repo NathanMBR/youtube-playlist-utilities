@@ -37,9 +37,9 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "youtube-playlist-utilities",
-        "width": 800,
-        "height": 600
+        "title": "Youtube Playlist Utilities",
+        "width": 1280,
+        "height": 720
       }
     ]
   }
