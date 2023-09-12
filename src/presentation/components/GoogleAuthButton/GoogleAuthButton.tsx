@@ -1,42 +1,34 @@
 import { Button } from "@mantine/core";
-import {
-  ReactNode,
-  CSSProperties
-} from "react";
+import { useState } from "react";
 
 import { GoogleIcon } from "./GoogleIcon";
 
 export type GoogleAuthButtonProps = {
   href: string;
-  children?: ReactNode;
 };
 
 export const GoogleAuthButton = (props: GoogleAuthButtonProps) => {
-  const {
-    href,
-    children
-  } = props;
+  const { href } = props;
 
-  const linkStyle: CSSProperties = {
-    color: "inherit",
-    textDecoration: "none"
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = () => {
+    setIsLoading(true);
+    window.location.href = href;
   };
 
   const buttonIcon = <GoogleIcon />;
 
   return (
-    <a
-      href={href}
-      style={linkStyle}
+    <Button
+      variant="default"
+      color="gray"
+      leftIcon={buttonIcon}
+      loading={isLoading}
+      onClick={handleClick}
+      fullWidth
     >
-      <Button
-        variant="default"
-        color="gray"
-        leftIcon={buttonIcon}
-        fullWidth
-      >
-        { children }
-      </Button>
-    </a>
+      Authenticate with Google
+    </Button>
   );
 };
