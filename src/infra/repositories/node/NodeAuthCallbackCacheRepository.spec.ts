@@ -7,10 +7,11 @@ import {
 
 import { NodeAuthCallbackCacheRepository } from "./NodeAuthCallbackCacheRepository";
 
+const globalDate = new Date();
 const mockedAuthCallback = {
   accessToken: "test-access-token",
   tokenType: "test-token-type",
-  expiresIn: 1,
+  expiresAt: globalDate,
   scope: "test-scope"
 };
 
