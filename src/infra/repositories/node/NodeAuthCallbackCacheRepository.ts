@@ -13,7 +13,17 @@ export class NodeAuthCallbackCacheRepository implements
       if (!authCallbackString)
         return null;
 
-      const authCallback = JSON.parse(authCallbackString) as GetAuthCallbackCacheRepository.Response;
+      type AuthCallbackRaw = Omit<NonNullable<GetAuthCallbackCacheRepository.Response>, "expiresAt"> & {
+        expiresAt: string;
+      };
+
+      const authCallbackRaw = JSON.parse(authCallbackString) as AuthCallbackRaw;
+
+      const authCallback = {
+        ...authCallbackRaw,
+        expiresAt: new Date(authCallbackRaw.expiresAt)
+      };
+
       return authCallback;
     } catch (error) {
       /* eslint-disable-next-line no-console */
