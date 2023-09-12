@@ -1,6 +1,6 @@
 export type DataAuthCallback = {
   accessToken: string;
   tokenType: string;
-  expiresIn: number;
+  expiresAt: Date;
   scope: string;
 };
