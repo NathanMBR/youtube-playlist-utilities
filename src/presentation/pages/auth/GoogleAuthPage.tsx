@@ -3,26 +3,43 @@ import {
   Container
 } from "@mantine/core";
 
-import { } from "@/domain/usecases";
+import { GetAuthCallback } from "@/domain/usecases";
 import { BaseLayout } from "@/presentation/layouts";
 import { GoogleAuthButton } from "@/presentation/components";
 
 export type GoogleAuthPageProps = {
+  getAuthCallback: GetAuthCallback;
   googleOAuth: {
     baseURL: string;
     clientId: string;
-    redirectURL: string;
+    redirectURLPath: string;
     scopes: string;
   };
 };
 
 export const GoogleAuthPage = (props: GoogleAuthPageProps) => {
-  const { googleOAuth } = props;
+  const {
+    getAuthCallback,
+    googleOAuth
+  } = props;
+
+  const authCallback = getAuthCallback.execute();
+
+  const clientBaseURL = window.location.origin;
+
+  const redirectURLBuilder = new URL(
+    googleOAuth.redirectURLPath,
+    clientBaseURL.startsWith("tauri")
+      ? clientBaseURL.replace("tauri://", "http://")
+      : clientBaseURL
+  );
+
+  const redirectURL = redirectURLBuilder.toString();
 
   const googleAuthenticationURLBuilder = new URL(googleOAuth.baseURL);
   googleAuthenticationURLBuilder.searchParams.append("client_id", googleOAuth.clientId);
-  googleAuthenticationURLBuilder.searchParams.append("redirect_uri", googleOAuth.redirectURL);
   googleAuthenticationURLBuilder.searchParams.append("scope", googleOAuth.scopes);
+  googleAuthenticationURLBuilder.searchParams.append("redirect_uri", redirectURL);
   googleAuthenticationURLBuilder.searchParams.append("response_type", "token");
   googleAuthenticationURLBuilder.searchParams.append("prompt", "consent");
 
@@ -36,12 +53,16 @@ export const GoogleAuthPage = (props: GoogleAuthPageProps) => {
       >
         <Paper
           shadow="md"
+          radius="md"
           p={30}
           mt={30}
-          radius="md"
           withBorder
         >
-          <GoogleAuthButton href={googleAuthenticationURL}>Authenticate with Google</GoogleAuthButton>
+          {
+            !authCallback
+              ? <GoogleAuthButton href={googleAuthenticationURL} />
+              : <div>Authenticated with Google</div>
+          }
         </Paper>
       </Container>
     </BaseLayout>
