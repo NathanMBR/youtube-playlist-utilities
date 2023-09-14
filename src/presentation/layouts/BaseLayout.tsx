@@ -10,7 +10,10 @@ import {
   NavbarProps
 } from "@/presentation/components";
 
-export type BaseLayoutActiveOptionId = "unavailable" | "auth" | "none";
+export type BaseLayoutActiveOptionId =
+  "unavailable" |
+  "auth" |
+  "none";
 
 export type BaseLayoutProps = {
   activeOptionId: BaseLayoutActiveOptionId;
@@ -28,7 +31,7 @@ export const BaseLayout = (props: BaseLayoutProps) => {
   const options: NavbarProps<BaseLayoutActiveOptionId>["options"] = [
     {
       activeId: "unavailable",
-      label: "Check a playlist for unavailable videos",
+      label: "Check for unavailable videos",
       link: "/playlist/unavailable",
       icon: IconEyeOff
     },
