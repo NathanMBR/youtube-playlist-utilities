@@ -8,7 +8,6 @@ import {
   Title
 } from "@mantine/core";
 import { Icon } from "@tabler/icons-react";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { ThemeSwitch } from "./ThemeSwitch";
@@ -72,41 +71,35 @@ const useStyles = createStyles(
   }
 );
 
-type Option = {
+type Option<T extends string = string> = {
   link: string;
   label: string;
   icon: Icon;
+  activeId: T;
 }
 
-export type NavbarProps = {
+export type NavbarProps<T extends string = string> = {
   version: string;
-  options: Array<Option>;
+  options: Array<Option<T>>;
+  activeOptionId?: T;
 }
 
 export const Navbar = (props: NavbarProps) => {
   const {
     version,
-    options
+    options,
+    activeOptionId
   } = props;
 
   const { classes, cx } = useStyles();
-  const [active, setActive] = useState("Billing");
 
   const getLinkClassName = (item: Option) => cx(
     classes.link,
 
     {
-      [classes.linkActive]: item.label === active
+      [classes.linkActive]: item.activeId === activeOptionId
     }
   );
-
-  const getLinkOnClickHandler = (item: Option) => {
-    const handler = () => {
-      setActive(item.label);
-    };
-
-    return handler;
-  };
 
   const links = options.map(
     item => (
@@ -114,7 +107,6 @@ export const Navbar = (props: NavbarProps) => {
         to={item.link}
         key={item.label}
         className={getLinkClassName(item)}
-        onClick={getLinkOnClickHandler(item)}
       >
         <item.icon
           className={classes.linkIcon}
