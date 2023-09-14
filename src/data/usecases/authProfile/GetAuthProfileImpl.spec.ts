@@ -16,7 +16,7 @@ const getSUTEnvironment = () => {
         {
           id: "test-id",
           name: "Test Name",
-          given_name: "Test Guiven Name",
+          given_name: "Test Given Name",
           family_name: "Test Family Name",
           picture: "https://test.picture/",
           locale: "test-locale"
