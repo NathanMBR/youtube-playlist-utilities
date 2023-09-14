@@ -10,25 +10,31 @@ import {
   NavbarProps
 } from "@/presentation/components";
 
+export type BaseLayoutActiveOptionId = "unavailable" | "auth" | "none";
+
 export type BaseLayoutProps = {
+  activeOptionId: BaseLayoutActiveOptionId;
   className?: string;
   children: ReactNode;
 };
 
 export const BaseLayout = (props: BaseLayoutProps) => {
   const {
+    activeOptionId,
     className,
     children
   } = props;
 
-  const options: NavbarProps["options"] = [
+  const options: NavbarProps<BaseLayoutActiveOptionId>["options"] = [
     {
+      activeId: "unavailable",
       label: "Check a playlist for unavailable videos",
       link: "/playlist/unavailable",
       icon: IconEyeOff
     },
 
     {
+      activeId: "auth",
       label: "Authenticate with Google",
       link: "/auth",
       icon: IconBrandGoogle
@@ -38,6 +44,7 @@ export const BaseLayout = (props: BaseLayoutProps) => {
   const navbar = <Navbar
     version="v0.0.1"
     options={options}
+    activeOptionId={activeOptionId}
   />;
 
   return (
