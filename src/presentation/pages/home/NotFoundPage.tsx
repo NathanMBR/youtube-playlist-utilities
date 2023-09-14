@@ -64,7 +64,7 @@ export const NotFoundPage = () => {
   const { classes } = useStyles();
 
   return (
-    <BaseLayout>
+    <BaseLayout activeOptionId="none">
       <Container className={classes.root}>
         <div className={classes.inner}>
           <NotFoundIllustration className={classes.image} />

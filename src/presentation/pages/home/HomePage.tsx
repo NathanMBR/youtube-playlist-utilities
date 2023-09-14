@@ -110,7 +110,10 @@ export const HomePage = (props: HomePageProps) => {
   };
 
   return (
-    <BaseLayout className={classes.wrapper}>
+    <BaseLayout
+      activeOptionId="none"
+      className={classes.wrapper}
+    >
       <Container
         size={700}
         className={classes.inner}

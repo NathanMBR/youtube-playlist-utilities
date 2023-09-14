@@ -22,7 +22,7 @@ export const GoogleAuthCallbackPage = (props: GoogleAuthCallbackPageProps) => {
     window.location.href = "/auth";
 
   return (
-    <BaseLayout>
+    <BaseLayout activeOptionId="auth">
       {
         isAuthCallbackSaved
           ? <Center h={height * 0.9}>

@@ -46,7 +46,7 @@ export const GoogleAuthPage = (props: GoogleAuthPageProps) => {
   const googleAuthenticationURL = googleAuthenticationURLBuilder.toString();
 
   return (
-    <BaseLayout>
+    <BaseLayout activeOptionId="auth">
       <Container
         size={420}
         my={40}
