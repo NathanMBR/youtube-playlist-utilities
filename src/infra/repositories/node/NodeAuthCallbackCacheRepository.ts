@@ -1,11 +1,13 @@
 import {
   GetAuthCallbackCacheRepository,
-  SetAuthCallbackCacheRepository
+  SetAuthCallbackCacheRepository,
+  RemoveAuthCallbackCacheRepository
 } from "@/data/repositories";
 
 export class NodeAuthCallbackCacheRepository implements
   GetAuthCallbackCacheRepository,
-  SetAuthCallbackCacheRepository
+  SetAuthCallbackCacheRepository,
+  RemoveAuthCallbackCacheRepository
 {
   get(): GetAuthCallbackCacheRepository.Response {
     try {
@@ -38,6 +40,19 @@ export class NodeAuthCallbackCacheRepository implements
       const authCallbackString = JSON.stringify(request);
 
       localStorage.setItem("auth-callback", authCallbackString);
+
+      return true;
+    } catch (error) {
+      /* eslint-disable-next-line no-console */
+      console.error(error);
+
+      return false;
+    }
+  }
+
+  remove(): RemoveAuthCallbackCacheRepository.Response {
+    try {
+      localStorage.removeItem("auth-callback");
 
       return true;
     } catch (error) {
