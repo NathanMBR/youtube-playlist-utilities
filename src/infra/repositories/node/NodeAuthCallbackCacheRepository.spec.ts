@@ -18,7 +18,8 @@ const mockedAuthCallback = {
 globalThis.localStorage = Object.create(
   {
     getItem: vi.fn(() => JSON.stringify(mockedAuthCallback)),
-    setItem: vi.fn(() => {})
+    setItem: vi.fn(() => {}),
+    removeItem: vi.fn(() => {})
   }
 );
 
@@ -51,7 +52,7 @@ describe("NodeAuthCallbackCacheRepository get()", () => {
     expect(SUTResponse).toBeNull();
   });
 
-  it("should call localStorage.getItem() with auth-callback", () => {
+  it("should pass auth-callback to localStorage.getItem()", () => {
     const { SUT } = getSUTEnvironment();
 
     const getItemSpy = vi.spyOn(localStorage, "getItem");
@@ -63,7 +64,7 @@ describe("NodeAuthCallbackCacheRepository get()", () => {
     expect(getItemSpy).toHaveBeenCalledWith(expectedCall);
   });
 
-  it("should call JSON.parse() with string AuthCallback", () => {
+  it("should pass string AuthCallback to JSON.parse()", () => {
     const { SUT } = getSUTEnvironment();
 
     const parseSpy = vi.spyOn(JSON, "parse");
@@ -168,6 +169,46 @@ describe("NodeAuthCallbackCacheRepository set()", () => {
     );
 
     const SUTResponse = SUT.set(mockedAuthCallback);
+
+    const expectedResponse = false;
+
+    expect(SUTResponse).toBe(expectedResponse);
+  });
+});
+
+describe("NodeAuthCallbackCacheRepository remove()", () => {
+  it("should successfully remove an AuthCallback", () => {
+    const { SUT } = getSUTEnvironment();
+
+    const SUTResponse = SUT.remove();
+
+    const expectedResponse = true;
+
+    expect(SUTResponse).toBe(expectedResponse);
+  });
+
+  it("should pass auth-callback to localStorage.removeItem()", () => {
+    const { SUT } = getSUTEnvironment();
+
+    const removeItemSpy = vi.spyOn(localStorage, "removeItem");
+
+    SUT.remove();
+
+    const expectedCall = "auth-callback";
+
+    expect(removeItemSpy).toHaveBeenCalledWith(expectedCall);
+  });
+
+  it("should return false if localStorage.removeItem() throws", () => {
+    const { SUT } = getSUTEnvironment();
+
+    vi.spyOn(localStorage, "removeItem").mockImplementationOnce(
+      () => {
+        throw new Error("Test error");
+      }
+    );
+
+    const SUTResponse = SUT.remove();
 
     const expectedResponse = false;
 
