@@ -1,17 +1,34 @@
-import { GoogleAuthPage } from "@/presentation/pages";
-import { GetAuthCallbackImpl } from "@/data/usecases";
-import { NodeAuthCallbackCacheRepository } from "@/infra/repositories";
+import {
+  GetAuthCallbackImpl,
+  GetAuthProfileImpl,
+  RemoveAuthCallbackImpl
+} from "@/data/usecases";
+import {
+  NodeAuthCallbackCacheRepository,
+  NodeAuthProfileRepository
+} from "@/infra/repositories";
 import {
   GOOGLE_OAUTH_BASE_URL,
   GOOGLE_OAUTH_CLIENT_ID,
   GOOGLE_OAUTH_REDIRECT_URL_PATH,
-  GOOGLE_OAUTH_SCOPES
+  GOOGLE_OAUTH_SCOPES,
+  GOOGLE_OAUTH_USER_INFO_URL
 } from "@/main/vite/config";
+import { GoogleAuthPage } from "@/presentation/pages";
 
 export const makeGoogleAuthPage = () => {
-  const getAuthCallbackRepository = new NodeAuthCallbackCacheRepository();
+  const authCallbackRepository = new NodeAuthCallbackCacheRepository();
   const getAuthCallback = new GetAuthCallbackImpl(
-    getAuthCallbackRepository
+    authCallbackRepository
+  );
+
+  const authProfileRepository = new NodeAuthProfileRepository(GOOGLE_OAUTH_USER_INFO_URL);
+  const getAuthProfile = new GetAuthProfileImpl(
+    authProfileRepository
+  );
+
+  const removeAuthCallback = new RemoveAuthCallbackImpl(
+    authCallbackRepository
   );
 
   const googleOAuth = {
@@ -24,6 +41,8 @@ export const makeGoogleAuthPage = () => {
   return (
     <GoogleAuthPage
       getAuthCallback={getAuthCallback}
+      getAuthProfile={getAuthProfile}
+      removeAuthCallback={removeAuthCallback}
       googleOAuth={googleOAuth}
     />
   );
