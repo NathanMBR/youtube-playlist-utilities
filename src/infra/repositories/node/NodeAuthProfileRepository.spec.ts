@@ -7,6 +7,8 @@ import {
 
 import { NodeAuthProfileRepository } from "./NodeAuthProfileRepository";
 
+vi.spyOn(console, "error").mockImplementation(() => {});
+
 const mockFetchOnce = () => {
   vi.spyOn(globalThis, "fetch").mockImplementationOnce(
     async () => Promise.resolve(
