@@ -1,11 +1,8 @@
-import {
-  Center,
-  Loader
-} from "@mantine/core";
-import { useViewportSize } from "@mantine/hooks";
+import { Text } from "@mantine/core";
 
 import { SetAuthCallback } from "@/domain/usecases";
 import { BaseLayout } from "@/presentation/layouts";
+import { LoadingScreen } from "@/presentation/components";
 
 export type GoogleAuthCallbackPageProps = {
   setAuthCallback: SetAuthCallback;
@@ -13,8 +10,6 @@ export type GoogleAuthCallbackPageProps = {
 
 export const GoogleAuthCallbackPage = (props: GoogleAuthCallbackPageProps) => {
   const { setAuthCallback } = props;
-
-  const { height } = useViewportSize();
 
   const isAuthCallbackSaved = setAuthCallback.execute();
 
@@ -25,10 +20,8 @@ export const GoogleAuthCallbackPage = (props: GoogleAuthCallbackPageProps) => {
     <BaseLayout activeOptionId="auth">
       {
         isAuthCallbackSaved
-          ? <Center h={height * 0.9}>
-            <Loader />
-          </Center>
-          : <p>ERROR: Authentication callback not saved</p>
+          ? <LoadingScreen />
+          : <Text>ERROR: Authentication callback not saved</Text>
       }
     </BaseLayout>
   );
