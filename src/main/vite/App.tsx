@@ -1,5 +1,6 @@
 import {
   MantineThemeProvider,
+  AuthCallbackServerProvider,
   ReactRouterDOMProvider
 } from "./providers";
 
@@ -7,7 +8,9 @@ export const App = () => {
   return (
     <>
       <MantineThemeProvider>
-        <ReactRouterDOMProvider />
+        <AuthCallbackServerProvider>
+          <ReactRouterDOMProvider />
+        </AuthCallbackServerProvider>
       </MantineThemeProvider>
     </>
   );
