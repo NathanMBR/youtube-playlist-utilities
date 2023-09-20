@@ -6,6 +6,7 @@ import {
   useState,
   useEffect
 } from "react";
+import { event } from "@tauri-apps/api";
 
 import {
   GoogleAuthButton,
@@ -25,7 +26,7 @@ export type GoogleAuthPageProps = {
   googleOAuth: {
     baseURL: string;
     clientId: string;
-    redirectURLPath: string;
+    redirectURL: string;
     scopes: string;
   };
 };
@@ -45,20 +46,10 @@ export const GoogleAuthPage = (props: GoogleAuthPageProps) => {
 
   const authCallback = getAuthCallback.execute();
 
-  const clientBaseURL = window.location.origin;
-  const redirectURLBuilder = new URL(
-    googleOAuth.redirectURLPath,
-    clientBaseURL.startsWith("tauri")
-      ? clientBaseURL.replace("tauri://", "http://")
-      : clientBaseURL
-  );
-
-  const redirectURL = redirectURLBuilder.toString();
-
   const googleAuthenticationURLBuilder = new URL(googleOAuth.baseURL);
   googleAuthenticationURLBuilder.searchParams.append("client_id", googleOAuth.clientId);
   googleAuthenticationURLBuilder.searchParams.append("scope", googleOAuth.scopes);
-  googleAuthenticationURLBuilder.searchParams.append("redirect_uri", redirectURL);
+  googleAuthenticationURLBuilder.searchParams.append("redirect_uri", googleOAuth.redirectURL);
   googleAuthenticationURLBuilder.searchParams.append("response_type", "token");
   googleAuthenticationURLBuilder.searchParams.append("prompt", "consent");
 
@@ -71,6 +62,14 @@ export const GoogleAuthPage = (props: GoogleAuthPageProps) => {
 
   useEffect(
     () => {
+      const unlistenAuthCallback = event.listen(
+        "google-auth-callback",
+        (callbackData: event.Event<string>) => {
+          const urlHash = new URL(callbackData.payload).hash;
+          window.location.href = "/auth/callback" + urlHash;
+        }
+      );
+
       if (authCallback) {
         setIsLoadingAuthProfile(true);
 
@@ -83,12 +82,14 @@ export const GoogleAuthPage = (props: GoogleAuthPageProps) => {
           setIsLoadingAuthProfile(false);
         };
 
-        /* eslint-disable no-console */
-        getAuthProfile.execute(getAuthProfileRequest)
-          .then(handleGetAuthProfile)
-          .catch(console.error);
-        /* eslint-enable no-console */
+        getAuthProfile
+          .execute(getAuthProfileRequest)
+          .then(handleGetAuthProfile);
       }
+
+      return () => {
+        unlistenAuthCallback.then(unlistenFn => unlistenFn());
+      };
     },
     []
   );
