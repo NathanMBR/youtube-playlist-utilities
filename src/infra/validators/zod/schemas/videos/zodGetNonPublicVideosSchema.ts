@@ -7,11 +7,13 @@ export const zodGetNonPublicVideosSchema = zod.object(
       .string(
         {
           description: "The GetNonPublicVideos playlist URL",
-          required_error: "The get non public videos playlist URL is required",
-          invalid_type_error: "The get non public videos playlist URL must be a string"
+          required_error: "The playlist URL is required",
+          invalid_type_error: "The playlist URL must be a string"
         }
       )
-      .url("The get non public videos playlist URL must be a valid URL")
+      .url("The playlist URL must be a valid URL")
+      .refine(url => url.includes("youtube.com/playlist"), "The playlist URL must be a valid YouTube playlist URL")
+      .refine(url => url.includes("list="), "The playlist URL must be a valid YouTube playlist URL")
   },
 
   {
