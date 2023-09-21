@@ -7,10 +7,10 @@ import {
   rem,
   useMantineTheme
 } from "@mantine/core";
-import { Link } from "react-router-dom";
 import { IconBrandGithub } from "@tabler/icons-react";
 
 import { BaseLayout } from "@/presentation/layouts";
+import { AuthenticateButton } from "@/presentation/components";
 
 const useStyles = createStyles(
   theme => (
@@ -104,11 +104,6 @@ export const HomePage = (props: HomePageProps) => {
     ? textGradientDark
     : textGradientLight;
 
-  const buttonGradient = {
-    from: "blue",
-    to: "cyan"
-  };
-
   return (
     <BaseLayout
       activeOptionId="none"
@@ -139,16 +134,7 @@ export const HomePage = (props: HomePageProps) => {
         </Text>
 
         <Group className={classes.controls}>
-          <Link to="/auth">
-            <Button
-              size="xl"
-              variant="gradient"
-              gradient={buttonGradient}
-              className={classes.control}
-            >
-              Authenticate
-            </Button>
-          </Link>
+          <AuthenticateButton />
 
           <Button
             component="a"
