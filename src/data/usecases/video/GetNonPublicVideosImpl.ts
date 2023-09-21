@@ -9,6 +9,8 @@ export class GetNonPublicVideosImpl implements GetNonPublicVideos {
   ) {}
 
   async execute(request: GetNonPublicVideos.Request): GetNonPublicVideos.Response {
+    const { authToken } = request;
+
     const validationResponse = this.getNonPublicVideosValidator.validate(request);
 
     if (!validationResponse.success)
@@ -35,7 +37,8 @@ export class GetNonPublicVideosImpl implements GetNonPublicVideos {
 
     const videos = await this.getPlaylistVideosRepository.get(
       {
-        playlistId
+        playlistId,
+        authToken
       }
     );
 
