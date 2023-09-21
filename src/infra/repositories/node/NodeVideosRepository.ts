@@ -6,13 +6,15 @@ import { GetPlaylistVideosRepository } from "@/data/repositories";
 
 export class NodeVideosRepository implements GetPlaylistVideosRepository {
   constructor(
-    private readonly youtubePlaylistVideosBaseURL: string,
-    private readonly youtubeApiKey: string
+    private readonly youtubePlaylistVideosBaseURL: string
   ) {}
 
   async get(request: GetPlaylistVideosRepository.Request): GetPlaylistVideosRepository.Response {
     try {
-      const { playlistId } = request;
+      const {
+        playlistId,
+        authToken
+      } = request;
 
       const maxResults = "50";
       const playlistItemsURLParts = [
@@ -21,23 +23,33 @@ export class NodeVideosRepository implements GetPlaylistVideosRepository {
         "status"
       ].join(",");
 
-      const playlistItemsURL = new URL(this.youtubePlaylistVideosBaseURL);
-      playlistItemsURL.searchParams.set("key", this.youtubeApiKey);
-      playlistItemsURL.searchParams.set("playlistId", playlistId);
-      playlistItemsURL.searchParams.set("part", playlistItemsURLParts);
-      playlistItemsURL.searchParams.set("maxResults", maxResults);
+      const playlistItemsURLBuilder = new URL(this.youtubePlaylistVideosBaseURL);
+      playlistItemsURLBuilder.searchParams.set("playlistId", playlistId);
+      playlistItemsURLBuilder.searchParams.set("part", playlistItemsURLParts);
+      playlistItemsURLBuilder.searchParams.set("maxResults", maxResults);
 
       const videos: Array<DataVideo> = [];
       let pageToken: string | undefined;
 
       do {
         if (!!pageToken)
-          playlistItemsURL.searchParams.set("pageToken", pageToken);
+          playlistItemsURLBuilder.searchParams.set("pageToken", pageToken);
         else
-          playlistItemsURL.searchParams.delete("pageToken");
+          playlistItemsURLBuilder.searchParams.delete("pageToken");
+
+        const playlistItemsURL = playlistItemsURLBuilder.toString();
 
         /* eslint-disable no-await-in-loop */
-        const playlistItemsResponse = await fetch(playlistItemsURL.toString());
+        const playlistItemsResponse = await fetch(
+          playlistItemsURL,
+
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${authToken}`
+            }
+          }
+        );
 
         if (!playlistItemsResponse.ok) {
           if (playlistItemsResponse.status === 400)
