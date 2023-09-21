@@ -78,17 +78,14 @@ const mockFetchOnce = () => {
 };
 
 const getSUTEnvironment = () => {
-  const youtubePlaylistVideosBaseURL = "https://test-url.com/test-playlist";
-  const youtubeApiKey = "test-key";
+  const youtubePlaylistVideosURL = "https://test-url.com/test-playlist";
 
   const SUT = new NodeVideosRepository(
-    youtubePlaylistVideosBaseURL,
-    youtubeApiKey
+    youtubePlaylistVideosURL
   );
 
   return {
-    youtubePlaylistVideosBaseURL,
-    youtubeApiKey,
+    youtubePlaylistVideosURL,
 
     SUT
   };
@@ -101,7 +98,8 @@ describe("NodeVideosRepository get()", () => {
     const { SUT } = getSUTEnvironment();
 
     const SUTRequest = {
-      playlistId: "test-playlist-id"
+      playlistId: "test-playlist-id",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = await SUT.get(SUTRequest);
@@ -241,7 +239,8 @@ describe("NodeVideosRepository get()", () => {
     const { SUT } = getSUTEnvironment();
 
     const SUTRequest = {
-      playlistId: "test-playlist-id"
+      playlistId: "test-playlist-id",
+      authToken: "test-auth-token"
     };
 
     await SUT.get(SUTRequest);
@@ -262,7 +261,8 @@ describe("NodeVideosRepository get()", () => {
     const { SUT } = getSUTEnvironment();
 
     const SUTRequest = {
-      playlistId: "test-playlist-id"
+      playlistId: "test-playlist-id",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = await SUT.get(SUTRequest);
@@ -288,7 +288,8 @@ describe("NodeVideosRepository get()", () => {
     const { SUT } = getSUTEnvironment();
 
     const SUTRequest = {
-      playlistId: "test-playlist-id"
+      playlistId: "test-playlist-id",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = await SUT.get(SUTRequest);
@@ -314,7 +315,8 @@ describe("NodeVideosRepository get()", () => {
     const { SUT } = getSUTEnvironment();
 
     const SUTRequest = {
-      playlistId: "test-playlist-id"
+      playlistId: "test-playlist-id",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = await SUT.get(SUTRequest);
@@ -340,7 +342,8 @@ describe("NodeVideosRepository get()", () => {
     const { SUT } = getSUTEnvironment();
 
     const SUTRequest = {
-      playlistId: "test-playlist-id"
+      playlistId: "test-playlist-id",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = await SUT.get(SUTRequest);
@@ -366,7 +369,8 @@ describe("NodeVideosRepository get()", () => {
     const { SUT } = getSUTEnvironment();
 
     const SUTRequest = {
-      playlistId: "test-playlist-id"
+      playlistId: "test-playlist-id",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = await SUT.get(SUTRequest);
@@ -389,7 +393,8 @@ describe("NodeVideosRepository get()", () => {
     const { SUT } = getSUTEnvironment();
 
     const SUTRequest = {
-      playlistId: "test-playlist-id"
+      playlistId: "test-playlist-id",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = await SUT.get(SUTRequest);
@@ -412,7 +417,8 @@ describe("NodeVideosRepository get()", () => {
     const { SUT } = getSUTEnvironment();
 
     const SUTRequest = {
-      playlistId: "test-playlist-id"
+      playlistId: "test-playlist-id",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = await SUT.get(SUTRequest);
@@ -430,21 +436,30 @@ describe("NodeVideosRepository get()", () => {
 
     const {
       SUT,
-      youtubePlaylistVideosBaseURL,
-      youtubeApiKey
+      youtubePlaylistVideosURL
     } = getSUTEnvironment();
 
     const fetchSpy = vi.spyOn(globalThis, "fetch");
 
     const SUTRequest = {
-      playlistId: "test-playlist-id"
+      playlistId: "test-playlist-id",
+      authToken: "test-auth-token"
     };
 
     await SUT.get(SUTRequest);
 
-    const expectedCall = `${youtubePlaylistVideosBaseURL}?key=${youtubeApiKey}&playlistId=${SUTRequest.playlistId}&part=id%2Csnippet%2Cstatus&maxResults=50`;
+    const expectedCall = [
+      `${youtubePlaylistVideosURL}?playlistId=${SUTRequest.playlistId}&part=id%2Csnippet%2Cstatus&maxResults=50`,
 
-    expect(fetchSpy).toHaveBeenCalledWith(expectedCall);
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${SUTRequest.authToken}`
+        }
+      }
+    ];
+
+    expect(fetchSpy).toHaveBeenCalledWith(...expectedCall);
   });
 
   it("should repass fetch errors to upper level", async () => {
@@ -457,7 +472,8 @@ describe("NodeVideosRepository get()", () => {
     const { SUT } = getSUTEnvironment();
 
     const SUTRequest = {
-      playlistId: "test-playlist-id"
+      playlistId: "test-playlist-id",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = SUT.get(SUTRequest);
