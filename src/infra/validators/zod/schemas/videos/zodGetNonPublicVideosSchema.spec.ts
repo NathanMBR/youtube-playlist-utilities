@@ -14,12 +14,12 @@ import { zodGetNonPublicVideosSchema } from "./zodGetNonPublicVideosSchema";
 describe("zodGetNonPublicVideosSchema", () => {
   it("should successfully validate a GetNonPublicVideos payload", () => {
     const SUTRequest = {
-      playlistURL: "https://test.com/test-url?query=test"
+      playlistURL: "https://youtube.com/playlist?list=test-playlist-id"
     };
 
     const SUTResponse = zodGetNonPublicVideosSchema.safeParse(SUTRequest) as SafeParseSuccess<typeof SUTRequest>;
 
-    expect(SUTResponse.success).toBeTruthy();
+    expect(SUTResponse.success).toBe(true);
   });
 
   it("should return error if playlistURL isn't defined", () => {
@@ -30,8 +30,8 @@ describe("zodGetNonPublicVideosSchema", () => {
     const SUTResponse = zodGetNonPublicVideosSchema.safeParse(SUTRequest) as SafeParseError<typeof SUTRequest>;
     const issue = SUTResponse.error.issues[0] as ZodIssue;
 
-    expect(SUTResponse.success).toBeFalsy();
-    expect(issue.message).toBe("The get non public videos playlist URL is required");
+    expect(SUTResponse.success).toBe(false);
+    expect(issue.message).toBe("The playlist URL is required");
   });
 
   it("should return error if playlistURL isn't a string", () => {
@@ -42,8 +42,8 @@ describe("zodGetNonPublicVideosSchema", () => {
     const SUTResponse = zodGetNonPublicVideosSchema.safeParse(SUTRequest) as SafeParseError<typeof SUTRequest>;
     const issue = SUTResponse.error.issues[0] as ZodIssue;
 
-    expect(SUTResponse.success).toBeFalsy();
-    expect(issue.message).toBe("The get non public videos playlist URL must be a string");
+    expect(SUTResponse.success).toBe(false);
+    expect(issue.message).toBe("The playlist URL must be a string");
   });
 
   it("should return an error if playlistURL isn't a valid URL", () => {
@@ -54,8 +54,32 @@ describe("zodGetNonPublicVideosSchema", () => {
     const SUTResponse = zodGetNonPublicVideosSchema.safeParse(SUTRequest) as SafeParseError<typeof SUTRequest>;
     const issue = SUTResponse.error.issues[0] as ZodIssue;
 
-    expect(SUTResponse.success).toBeFalsy();
-    expect(issue.message).toBe("The get non public videos playlist URL must be a valid URL");
+    expect(SUTResponse.success).toBe(false);
+    expect(issue.message).toBe("The playlist URL must be a valid URL");
+  });
+
+  it("should return an error if playlistURL isn't from YouTube domain", () => {
+    const SUTRequest = {
+      playlistURL: "https://test.com/playlist?list=test-playlist-id"
+    };
+
+    const SUTResponse = zodGetNonPublicVideosSchema.safeParse(SUTRequest) as SafeParseError<typeof SUTRequest>;
+    const issue = SUTResponse.error.issues[0] as ZodIssue;
+
+    expect(SUTResponse.success).toBe(false);
+    expect(issue.message).toBe("The playlist URL must be a valid YouTube playlist URL");
+  });
+
+  it("should return an error if playlistURL doesn't have a list query parameter", () => {
+    const SUTRequest = {
+      playlistURL: "https://youtube.com/playlist"
+    };
+
+    const SUTResponse = zodGetNonPublicVideosSchema.safeParse(SUTRequest) as SafeParseError<typeof SUTRequest>;
+    const issue = SUTResponse.error.issues[0] as ZodIssue;
+
+    expect(SUTResponse.success).toBe(false);
+    expect(issue.message).toBe("The playlist URL must be a valid YouTube playlist URL");
   });
 
   it("should return error if payload isn't defined", () => {
@@ -64,7 +88,7 @@ describe("zodGetNonPublicVideosSchema", () => {
     const SUTResponse = zodGetNonPublicVideosSchema.safeParse(SUTRequest) as SafeParseError<typeof SUTRequest>;
     const issue = SUTResponse.error.issues[0] as ZodIssue;
 
-    expect(SUTResponse.success).toBeFalsy();
+    expect(SUTResponse.success).toBe(false);
     expect(issue.message).toBe("The get non public videos payload is required");
   });
 
@@ -74,7 +98,7 @@ describe("zodGetNonPublicVideosSchema", () => {
     const SUTResponse = zodGetNonPublicVideosSchema.safeParse(SUTRequest) as SafeParseError<typeof SUTRequest>;
     const issue = SUTResponse.error.issues[0] as ZodIssue;
 
-    expect(SUTResponse.success).toBeFalsy();
+    expect(SUTResponse.success).toBe(false);
     expect(issue.message).toBe("The get non public videos payload must be an object");
   });
 });
