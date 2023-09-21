@@ -104,7 +104,8 @@ describe("GetNonPublicVideosImpl", () => {
     const { SUT } = getSUTEnvironment();
 
     const SUTRequest = {
-      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = await SUT.execute(SUTRequest);
@@ -181,7 +182,8 @@ describe("GetNonPublicVideosImpl", () => {
     );
 
     const SUTRequest = {
-      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = await SUT.execute(SUTRequest);
@@ -207,7 +209,8 @@ describe("GetNonPublicVideosImpl", () => {
     );
 
     const SUTRequest = {
-      playlistURL: "url.test/playlist-id?telemetry=false"
+      playlistURL: "url.test/playlist-id?telemetry=false",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = await SUT.execute(SUTRequest);
@@ -233,7 +236,8 @@ describe("GetNonPublicVideosImpl", () => {
     );
 
     const SUTRequest = {
-      playlistURL: "url.test/playlist-id?list=&telemetry=false"
+      playlistURL: "url.test/playlist-id?list=&telemetry=false",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = await SUT.execute(SUTRequest);
@@ -259,7 +263,8 @@ describe("GetNonPublicVideosImpl", () => {
     );
 
     const SUTRequest = {
-      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = await SUT.execute(SUTRequest);
@@ -278,13 +283,15 @@ describe("GetNonPublicVideosImpl", () => {
     const validateSpy = vi.spyOn(getNonPublicVideosValidator, "validate");
 
     const SUTRequest = {
-      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false",
+      authToken: "test-auth-token"
     };
 
     await SUT.execute(SUTRequest);
 
     const expectedCall = {
-      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false",
+      authToken: "test-auth-token"
     };
 
     expect(validateSpy).toHaveBeenCalledWith(expectedCall);
@@ -296,13 +303,15 @@ describe("GetNonPublicVideosImpl", () => {
     const getSpy = vi.spyOn(getPlaylistVideosRepository, "get");
 
     const SUTRequest = {
-      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false",
+      authToken: "test-auth-token"
     };
 
     await SUT.execute(SUTRequest);
 
     const expectedCall = {
-      playlistId: "test-playlist-id"
+      playlistId: "test-playlist-id",
+      authToken: "test-auth-token"
     };
 
     expect(getSpy).toHaveBeenCalledWith(expectedCall);
@@ -318,7 +327,8 @@ describe("GetNonPublicVideosImpl", () => {
     );
 
     const SUTRequest = {
-      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = SUT.execute(SUTRequest);
@@ -336,7 +346,8 @@ describe("GetNonPublicVideosImpl", () => {
     );
 
     const SUTRequest = {
-      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false"
+      playlistURL: "url.test/playlist?list=test-playlist-id&telemetry=false",
+      authToken: "test-auth-token"
     };
 
     const SUTResponse = SUT.execute(SUTRequest);
