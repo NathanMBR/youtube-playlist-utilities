@@ -3,6 +3,7 @@ import { DataVideo } from "@/data/models";
 export namespace GetPlaylistVideosRepository {
   export type Request = {
     playlistId: string;
+    authToken: string;
   };
 
   type SuccessResponse = {
