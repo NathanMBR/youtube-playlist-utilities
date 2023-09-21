@@ -3,6 +3,7 @@ import { Video } from "@/domain/models";
 export namespace GetNonPublicVideos {
   export type Request = {
     playlistURL: string;
+    authToken: string;
   };
 
   type NonPublicVideos = Array<Video>;
