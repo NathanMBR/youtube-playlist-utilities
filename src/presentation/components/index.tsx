@@ -6,3 +6,4 @@ export * from "./LoadingScreen";
 export * from "./AuthenticateButton";
 export * from "./NonPublicVideosForm";
 export * from "./VideosTable";
+export * from "./ErrorAlert";
