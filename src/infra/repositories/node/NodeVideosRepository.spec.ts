@@ -7,7 +7,7 @@ import {
 
 import { NodeVideosRepository } from "./NodeVideosRepository";
 
-const mockFetchOnce = () => {
+const mockFetchForGetOnce = () => {
   vi.spyOn(globalThis, "fetch").mockImplementationOnce(
     () => Promise.resolve(
       {
@@ -77,6 +77,17 @@ const mockFetchOnce = () => {
   );
 };
 
+const mockFetchForRemoveOnce = () => {
+  vi.spyOn(globalThis, "fetch").mockImplementationOnce(
+    () => Promise.resolve(
+      {
+        ok: true,
+        status: 200
+      } as any
+    )
+  );
+};
+
 const getSUTEnvironment = () => {
   const youtubePlaylistVideosURL = "https://test-url.com/test-playlist";
 
@@ -93,7 +104,7 @@ const getSUTEnvironment = () => {
 
 describe("NodeVideosRepository get()", () => {
   it("should successfully get all playlist videos", async () => {
-    mockFetchOnce();
+    mockFetchForGetOnce();
 
     const { SUT } = getSUTEnvironment();
 
@@ -431,13 +442,10 @@ describe("NodeVideosRepository get()", () => {
     expect(SUTResponse).toEqual(expectedResponse);
   });
 
-  it("should pass playlistItemsURL to fetch call", async () => {
-    mockFetchOnce();
+  it("should pass playlistItemsURL and authToken to fetch call", async () => {
+    mockFetchForGetOnce();
 
-    const {
-      SUT,
-      youtubePlaylistVideosURL
-    } = getSUTEnvironment();
+    const { SUT, youtubePlaylistVideosURL } = getSUTEnvironment();
 
     const fetchSpy = vi.spyOn(globalThis, "fetch");
 
@@ -477,6 +485,155 @@ describe("NodeVideosRepository get()", () => {
     };
 
     const SUTResponse = SUT.get(SUTRequest);
+
+    await expect(SUTResponse).rejects.toThrow();
+  });
+});
+
+describe("NodeVideosRepository remove()", () => {
+  it("should successfully remove a video", async () => {
+    mockFetchForRemoveOnce();
+
+    const { SUT } = getSUTEnvironment();
+
+    const SUTRequest = {
+      id: "test-id",
+      authToken: "test-auth-token"
+    };
+
+    const SUTResponse = await SUT.remove(SUTRequest);
+
+    const expectedResponse = {
+      success: true
+    };
+
+    expect(SUTResponse).toEqual(expectedResponse);
+  });
+
+  it("should return INVALID_ID error if fetch returns status code 400", async () => {
+    vi.spyOn(globalThis, "fetch").mockImplementationOnce(
+      () => Promise.resolve(
+        {
+          ok: false,
+          status: 400
+        } as any
+      )
+    );
+
+    const { SUT } = getSUTEnvironment();
+
+    const SUTRequest = {
+      id: "test-id",
+      authToken: "test-auth-token"
+    };
+
+    const SUTResponse = await SUT.remove(SUTRequest);
+
+    const expectedResponse = {
+      success: false,
+      error: "INVALID_ID"
+    };
+
+    expect(SUTResponse).toEqual(expectedResponse);
+  });
+
+  it("should return UNAUTHORIZED error if fetch returns status code 403", async () => {
+    vi.spyOn(globalThis, "fetch").mockImplementationOnce(
+      () => Promise.resolve(
+        {
+          ok: false,
+          status: 403
+        } as any
+      )
+    );
+
+    const { SUT } = getSUTEnvironment();
+
+    const SUTRequest = {
+      id: "test-id",
+      authToken: "test-auth-token"
+    };
+
+    const SUTResponse = await SUT.remove(SUTRequest);
+
+    const expectedResponse = {
+      success: false,
+      error: "UNAUTHORIZED"
+    };
+
+    expect(SUTResponse).toEqual(expectedResponse);
+  });
+
+  it("should return NOT_FOUND error if fetch returns status code 404", async () => {
+    vi.spyOn(globalThis, "fetch").mockImplementationOnce(
+      () => Promise.resolve(
+        {
+          ok: false,
+          status: 404
+        } as any
+      )
+    );
+
+    const { SUT } = getSUTEnvironment();
+
+    const SUTRequest = {
+      id: "test-id",
+      authToken: "test-auth-token"
+    };
+
+    const SUTResponse = await SUT.remove(SUTRequest);
+
+    const expectedResponse = {
+      success: false,
+      error: "NOT_FOUND"
+    };
+
+    expect(SUTResponse).toEqual(expectedResponse);
+  });
+
+  it("should pass playlistItemsURL and authToken to fetch call", async () => {
+    mockFetchForRemoveOnce();
+
+    const { SUT, youtubePlaylistVideosURL } = getSUTEnvironment();
+
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+    const SUTRequest = {
+      id: "test-id",
+      authToken: "test-auth-token"
+    };
+
+    await SUT.remove(SUTRequest);
+
+    const expectedCall = [
+      `${youtubePlaylistVideosURL}?id=${SUTRequest.id}`,
+
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${SUTRequest.authToken}`
+        }
+      }
+    ];
+
+    expect(fetchSpy).toHaveBeenCalledWith(...expectedCall);
+  });
+
+  it("should repass fetch error to upper level", async () => {
+    vi.spyOn(globalThis, "fetch").mockImplementationOnce(
+      async () => {
+        throw new Error("Test error");
+      }
+    );
+
+    const { SUT } = getSUTEnvironment();
+
+    const SUTRequest = {
+      id: "test-id",
+      authToken: "test-auth-token"
+    };
+
+    const SUTResponse = SUT.remove(SUTRequest);
 
     await expect(SUTResponse).rejects.toThrow();
   });
