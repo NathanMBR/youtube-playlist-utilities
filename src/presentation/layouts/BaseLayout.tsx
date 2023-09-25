@@ -45,7 +45,7 @@ export const BaseLayout = (props: BaseLayoutProps) => {
   ];
 
   const navbar = <Navbar
-    version="v0.0.1"
+    version="v1.0.0"
     options={options}
     activeOptionId={activeOptionId}
   />;
