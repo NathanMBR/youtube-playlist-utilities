@@ -1,7 +1,8 @@
 import {
   Table,
   ActionIcon,
-  Tooltip
+  Tooltip,
+  Text
 } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
@@ -18,6 +19,13 @@ export const VideosTable = (props: VideosTableProps) => {
     videos,
     getRemoveVideoHandler
   } = props;
+
+  if (videos.length <= 0)
+    return (
+      <Text mt={16}>
+        This playlist doesn&apos;t have unavailable videos.
+      </Text>
+    );
 
   return (
     <Table
