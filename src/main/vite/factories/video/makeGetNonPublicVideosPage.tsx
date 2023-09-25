@@ -4,7 +4,8 @@ import {
 } from "@/infra/repositories";
 import {
   GetAuthCallbackImpl,
-  GetNonPublicVideosImpl
+  GetNonPublicVideosImpl,
+  RemoveVideoImpl
 } from "@/data/usecases";
 import { YOUTUBE_BASE_PLAYLIST_ITEMS_URL } from "@/main/vite/config";
 import { ZodGetNonPublicVideosValidator } from "@/infra/validators";
@@ -25,10 +26,15 @@ export const makeGetNonPublicVideosPage = () => {
     playlistVideosRepository
   );
 
+  const removeVideo = new RemoveVideoImpl(
+    playlistVideosRepository
+  );
+
   return (
     <GetNonPublicVideosPage
       getAuthCallback={getAuthCallback}
       getNonPublicVideos={getNonPublicVideos}
+      removeVideo={removeVideo}
     />
   );
 };
