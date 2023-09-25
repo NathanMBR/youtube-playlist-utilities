@@ -16,7 +16,8 @@ import {
 import {
   NonPublicVideosForm,
   VideosTable,
-  LoadingScreen
+  LoadingScreen,
+  ErrorAlert
 } from "@/presentation/components";
 import { Video } from "@/domain/models";
 
@@ -42,6 +43,10 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
 
   const handleSearch = async (url: string) => {
     setUrl(url);
+  };
+
+  const handleCloseErrorAlert = () => {
+    setError("");
   };
 
   const executeGetNonPublicVideos = async () => {
@@ -138,7 +143,10 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
             : <>
               {
                 error
-                  ? <li>{error}</li>
+                  ? <ErrorAlert
+                    message={error}
+                    handleCloseAlert={handleCloseErrorAlert}
+                  />
                   : null
               }
               {
