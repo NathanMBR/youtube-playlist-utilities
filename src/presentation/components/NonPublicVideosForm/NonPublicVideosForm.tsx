@@ -73,7 +73,7 @@ export const NonPublicVideosForm = (props: NonPublicVideosFormProps) => {
         pt="sm"
         radius="xl"
         size="md"
-        placeholder="Search questions"
+        placeholder="Playlist URL"
         rightSectionWidth={42}
         icon={searchIcon}
         rightSection={submitButton}
