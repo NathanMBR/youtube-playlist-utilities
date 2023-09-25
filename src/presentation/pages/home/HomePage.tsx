@@ -8,6 +8,7 @@ import {
   useMantineTheme
 } from "@mantine/core";
 import { IconBrandGithub } from "@tabler/icons-react";
+import { shell } from "@tauri-apps/api";
 
 import { BaseLayout } from "@/presentation/layouts";
 import { AuthenticateButton } from "@/presentation/components";
@@ -90,6 +91,12 @@ export const HomePage = (props: HomePageProps) => {
   const { classes } = useStyles();
   const { colorScheme } = useMantineTheme();
 
+  const handleRepositoryButtonClick = () => {
+    shell.open(githubRepositoryURL);
+  };
+
+  const githubIcon = <IconBrandGithub size={20} />;
+
   const textGradientLight = {
     from: "red.9",
     to: "red.6"
@@ -137,12 +144,11 @@ export const HomePage = (props: HomePageProps) => {
           <AuthenticateButton />
 
           <Button
-            component="a"
             size="xl"
             variant="default"
-            href={githubRepositoryURL}
-            leftIcon={<IconBrandGithub size={20} />}
+            leftIcon={githubIcon}
             className={classes.control}
+            onClick={handleRepositoryButtonClick}
           >
             Source Code
           </Button>
