@@ -2,9 +2,15 @@ import {
   DataVideo,
   DataPagination
 } from "@/data/models";
-import { GetPlaylistVideosRepository } from "@/data/repositories";
+import {
+  GetPlaylistVideosRepository,
+  RemovePlaylistVideoRepository
+} from "@/data/repositories";
 
-export class NodeVideosRepository implements GetPlaylistVideosRepository {
+export class NodeVideosRepository implements
+  GetPlaylistVideosRepository,
+  RemovePlaylistVideoRepository
+{
   constructor(
     private readonly youtubePlaylistVideosBaseURL: string
   ) {}
@@ -102,5 +108,50 @@ export class NodeVideosRepository implements GetPlaylistVideosRepository {
 
       throw error;
     }
+  }
+
+  async remove(request: RemovePlaylistVideoRepository.Request): RemovePlaylistVideoRepository.Response {
+    const {
+      id,
+      authToken
+    } = request;
+
+    const playlistItemsURLBuilder = new URL(this.youtubePlaylistVideosBaseURL);
+    playlistItemsURLBuilder.searchParams.set("id", id);
+
+    const playlistItemsURL = playlistItemsURLBuilder.toString();
+
+    const removePlaylistItemResponse = await fetch(
+      playlistItemsURL,
+
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      }
+    );
+
+    if (removePlaylistItemResponse.status === 400)
+      return {
+        success: false,
+        error: "INVALID_ID"
+      };
+
+    if (removePlaylistItemResponse.status === 403)
+      return {
+        success: false,
+        error: "UNAUTHORIZED"
+      };
+
+    if (removePlaylistItemResponse.status === 404)
+      return {
+        success: false,
+        error: "NOT_FOUND"
+      };
+
+    return {
+      success: true
+    };
   }
 }
