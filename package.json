@@ -1,6 +1,6 @@
 {
   "name": "youtube-playlist-utilities",
-  "description": "YouTube Playlist Utilities",
+  "description": "A playlist manager for YouTube",
   "private": true,
   "version": "1.0.0",
   "type": "module",
