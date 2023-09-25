@@ -21,3 +21,7 @@ This program is able to get all unavailable videos of a playlist, show them to t
 3. Run the command `pnpm install` to install all dependencies
 4. Run the command `pnpm tauri build` to generate a build
 5. Use the generated binaries (console will show their path)
+
+## License
+
+[MIT](./LICENSE)
