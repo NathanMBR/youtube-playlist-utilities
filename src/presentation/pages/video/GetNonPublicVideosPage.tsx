@@ -1,28 +1,36 @@
 import {
-  Title
-} from "@mantine/core";
-import { useState } from "react";
+  useState,
+  useEffect
+} from "react";
+import { Title } from "@mantine/core";
 
 import {
   GetAuthCallback,
-  GetNonPublicVideos
+  GetNonPublicVideos,
+  RemoveVideo
 } from "@/domain/usecases";
 import {
   BaseLayout,
   AuthenticationRequiredLayout
 } from "@/presentation/layouts";
-import { NonPublicVideosForm } from "@/presentation/components";
+import {
+  NonPublicVideosForm,
+  VideosTable,
+  LoadingScreen
+} from "@/presentation/components";
 import { Video } from "@/domain/models";
 
 export type GetNonPublicVideosPageProps = {
   getAuthCallback: GetAuthCallback;
   getNonPublicVideos: GetNonPublicVideos;
+  removeVideo: RemoveVideo;
 }
 
 export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
   const {
     getAuthCallback,
-    getNonPublicVideos
+    getNonPublicVideos,
+    removeVideo
   } = props;
 
   const authCallback = getAuthCallback.execute();
@@ -30,9 +38,16 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
   const [videos, setVideos] = useState<Array<Video> | null>(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [url, setUrl] = useState("");
 
   const handleSearch = async (url: string) => {
+    setUrl(url);
+  };
+
+  const executeGetNonPublicVideos = async () => {
     setIsLoading(true);
+    setError("");
+    setVideos(null);
 
     const nonPublicVideosResponse = await getNonPublicVideos.execute(
       {
@@ -41,13 +56,67 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
       }
     );
 
-    if (!nonPublicVideosResponse.success)
-      return setError(nonPublicVideosResponse.error);
+    if (!nonPublicVideosResponse.success) {
+      type PossibleErrors = typeof nonPublicVideosResponse.error;
+
+      const errorMessages: Record<PossibleErrors, string> = {
+        INVALID_PLAYLIST_URL: "Invalid playlist URL",
+        VALIDATION_FAILED: "Invalid playlist URL",
+        REPOSITORY_FAILED: "The playlist doesn't exist, isn't public or isn't valid"
+      };
+
+      setError(errorMessages[nonPublicVideosResponse.error]);
+      setIsLoading(false);
+      return;
+    }
 
     setVideos(nonPublicVideosResponse.data);
 
     setIsLoading(false);
   };
+
+  const getRemoveVideoHandler = (videoId: string) => {
+    return async () => {
+      setIsLoading(true);
+
+      const removeVideoResponse = await removeVideo.execute(
+        {
+          id: videoId,
+          authToken: authCallback!.accessToken
+        }
+      );
+
+      if (!removeVideoResponse.success) {
+        type PossibleErrors = typeof removeVideoResponse.error;
+
+        const errorMessages: Record<PossibleErrors, string> = {
+          INVALID_ID: "Invalid video ID",
+          UNAUTHORIZED: "You can't remove a video from a playlist that isn't yours",
+          NOT_FOUND: "Video not found in the current playlist"
+        };
+
+        const errorMessage = errorMessages[removeVideoResponse.error];
+
+        setError(errorMessage);
+        setIsLoading(false);
+        return;
+      }
+
+      await executeGetNonPublicVideos();
+
+      setIsLoading(false);
+    };
+  };
+
+  useEffect(
+    () => {
+      if (!url)
+        return;
+
+      executeGetNonPublicVideos();
+    },
+    [url]
+  );
 
   return (
     <BaseLayout activeOptionId="unavailable">
@@ -62,13 +131,25 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
           handleSearch={handleSearch}
           disabled={isLoading}
         />
-        {error && <li>{error}</li>}
+
         {
-          videos && <ul>
-            {
-              videos.map(video => <li key={video.id}>{video.snippet.title}</li>)
-            }
-          </ul>
+          isLoading
+            ? <LoadingScreen heightProportion={0.5} />
+            : <>
+              {
+                error
+                  ? <li>{error}</li>
+                  : null
+              }
+              {
+                videos
+                  ? <VideosTable
+                    videos={videos}
+                    getRemoveVideoHandler={getRemoveVideoHandler}
+                  />
+                  : null
+              }
+            </>
         }
       </AuthenticationRequiredLayout>
     </BaseLayout>
