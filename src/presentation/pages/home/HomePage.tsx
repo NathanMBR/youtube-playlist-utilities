@@ -137,7 +137,7 @@ export const HomePage = (props: HomePageProps) => {
           color="dimmed"
           className={classes.description}
         >
-          Authenticate with Google to start importing playlists, checking for unavailable videos and more
+          Authenticate with Google to start checking for unavailable videos, removing them and more
         </Text>
 
         <Group className={classes.controls}>
