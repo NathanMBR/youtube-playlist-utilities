@@ -1,0 +1,51 @@
+name: Release Workflow
+on:
+  workflow_run:
+    workflows: [Code Quality Workflow]
+    types: [completed]
+    branches: [master]
+
+jobs:
+  publish:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
+
+    runs-on: ${{ matrix.platform }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.17.1
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-20.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Install Frontend Dependencies
+        run: pnpm install
+      - name: Setup Environment Variables
+        run : echo "VITE_GITHUB_REPOSITORY_URL=${{ secrets.VITE_GITHUB_REPOSITORY_URL }}\nVITE_GOOGLE_OAUTH_CLIENT_ID=${{ secrets.VITE_GOOGLE_OAUTH_CLIENT_ID }}\nVITE_GOOGLE_OAUTH_BASE_URL=${{ secrets.VITE_GOOGLE_OAUTH_BASE_URL }}\nVITE_GOOGLE_OAUTH_REDIRECT_URL=${{ secrets.VITE_GOOGLE_OAUTH_REDIRECT_URL }}\nVITE_GOOGLE_OAUTH_SCOPES=${{ secrets.VITE_GOOGLE_OAUTH_SCOPES }}\nVITE_GOOGLE_OAUTH_USER_INFO_URL=${{ secrets.VITE_GOOGLE_OAUTH_USER_INFO_URL }}\nVITE_YOUTUBE_BASE_PLAYLIST_ITEMS_URL=${{ secrets.VITE_YOUTUBE_BASE_PLAYLIST_ITEMS_URL }}\nVITE_PORT=${{ secrets.VITE_PORT }}\n" > .env
+      - name: Run Tauri Action
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: app-v__VERSION__
+          releaseName: 'App v__VERSION__'
+          releaseBody: 'See the assets to download this version and install.'
+          releaseDraft: true
+          prerelease: false
+
