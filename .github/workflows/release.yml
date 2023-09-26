@@ -37,7 +37,8 @@ jobs:
       - name: Install Frontend Dependencies
         run: pnpm install
       - name: Setup Environment Variables
-        run : echo "VITE_GITHUB_REPOSITORY_URL=${{ secrets.VITE_GITHUB_REPOSITORY_URL }}\nVITE_GOOGLE_OAUTH_CLIENT_ID=${{ secrets.VITE_GOOGLE_OAUTH_CLIENT_ID }}\nVITE_GOOGLE_OAUTH_BASE_URL=${{ secrets.VITE_GOOGLE_OAUTH_BASE_URL }}\nVITE_GOOGLE_OAUTH_REDIRECT_URL=${{ secrets.VITE_GOOGLE_OAUTH_REDIRECT_URL }}\nVITE_GOOGLE_OAUTH_SCOPES=${{ secrets.VITE_GOOGLE_OAUTH_SCOPES }}\nVITE_GOOGLE_OAUTH_USER_INFO_URL=${{ secrets.VITE_GOOGLE_OAUTH_USER_INFO_URL }}\nVITE_YOUTUBE_BASE_PLAYLIST_ITEMS_URL=${{ secrets.VITE_YOUTUBE_BASE_PLAYLIST_ITEMS_URL }}\nVITE_PORT=${{ secrets.VITE_PORT }}\n" > .env
+        run : |
+          echo "VITE_GOOGLE_OAUTH_CLIENT_ID=${{ secrets.VITE_GOOGLE_OAUTH_CLIENT_ID }}" > .env
       - name: Run Tauri Action
         uses: tauri-apps/tauri-action@v0
         env:
