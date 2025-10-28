@@ -4,20 +4,25 @@ import {
   Tooltip,
   Text
 } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import {
+  IconTrash,
+  IconReplace
+} from "@tabler/icons-react";
 
 import { Video } from "@/domain/models";
 
 export type VideosTableProps = {
   videos: Array<Video>;
   getRemoveVideoHandler: (videoId: string) => () => void;
+  getSubstituteVideoHandler: (videoId: string) => () => void;
   disableRemoveVideosButton?: boolean;
 }
 
 export const VideosTable = (props: VideosTableProps) => {
   const {
     videos,
-    getRemoveVideoHandler
+    getRemoveVideoHandler,
+    getSubstituteVideoHandler
   } = props;
 
   if (videos.length <= 0)
@@ -46,6 +51,11 @@ export const VideosTable = (props: VideosTableProps) => {
               <td>{video.snippet.title}</td>
               <td>{video.snippet.position + 1}</td>
               <td>
+                <Tooltip label="Substitute video">
+                  <ActionIcon onClick={getSubstituteVideoHandler(video.id)} mr="xs">
+                    <IconReplace />
+                  </ActionIcon>
+                </Tooltip>
                 <Tooltip label="Remove video">
                   <ActionIcon onClick={getRemoveVideoHandler(video.id)}>
                     <IconTrash />

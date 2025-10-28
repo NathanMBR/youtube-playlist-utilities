@@ -7,7 +7,8 @@ import { Title } from "@mantine/core";
 import {
   GetAuthCallback,
   GetNonPublicVideos,
-  RemoveVideo
+  RemoveVideo,
+  SubstituteVideo
 } from "@/domain/usecases";
 import {
   BaseLayout,
@@ -17,7 +18,8 @@ import {
   NonPublicVideosForm,
   VideosTable,
   LoadingScreen,
-  ErrorAlert
+  ErrorAlert,
+  SubstituteVideoModal
 } from "@/presentation/components";
 import { Video } from "@/domain/models";
 
@@ -25,13 +27,15 @@ export type GetNonPublicVideosPageProps = {
   getAuthCallback: GetAuthCallback;
   getNonPublicVideos: GetNonPublicVideos;
   removeVideo: RemoveVideo;
+  substituteVideo: SubstituteVideo;
 }
 
 export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
   const {
     getAuthCallback,
     getNonPublicVideos,
-    removeVideo
+    removeVideo,
+    substituteVideo
   } = props;
 
   const authCallback = getAuthCallback.execute();
@@ -40,6 +44,9 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [url, setUrl] = useState("");
+  const [substituteModalOpened, setSubstituteModalOpened] = useState(false);
+  const [selectedVideoForSubstitution, setSelectedVideoForSubstitution] = useState<Video | null>(null);
+  const [substituteError, setSubstituteError] = useState("");
 
   const handleSearch = async (url: string) => {
     setUrl(url);
@@ -113,6 +120,52 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
     };
   };
 
+  const getSubstituteVideoHandler = (videoId: string) => {
+    return () => {
+      const videoToSubstitute = videos?.find(v => v.id === videoId);
+      if (videoToSubstitute) {
+        setSelectedVideoForSubstitution(videoToSubstitute);
+        setSubstituteModalOpened(true);
+        setSubstituteError("");
+      }
+    };
+  };
+
+  const handleSubstituteVideo = async (substituteVideoId: string) => {
+    if (!selectedVideoForSubstitution) return;
+
+    const substituteVideoResponse = await substituteVideo.execute({
+      id: selectedVideoForSubstitution.id,
+      substituteId: substituteVideoId,
+      authToken: authCallback!.accessToken
+    });
+
+    if (!substituteVideoResponse.success) {
+      type PossibleErrors = typeof substituteVideoResponse.error;
+
+      const errorMessages: Record<PossibleErrors, string> = {
+        INVALID_ID: "Invalid video ID",
+        INVALID_SUBSTITUTE_ID: "Invalid substitute video ID",
+        NOT_FOUND: "Original video not found in playlist",
+        SUBSTITUTE_NOT_FOUND: "Substitute video not found or not available",
+        UNAUTHORIZED: "You can't modify a playlist that isn't yours"
+      };
+
+      setSubstituteError(errorMessages[substituteVideoResponse.error]);
+      return;
+    }
+
+    await executeGetNonPublicVideos();
+    setSubstituteModalOpened(false);
+    setSelectedVideoForSubstitution(null);
+  };
+
+  const handleSubstituteModalClose = () => {
+    setSubstituteModalOpened(false);
+    setSelectedVideoForSubstitution(null);
+    setSubstituteError("");
+  };
+
   useEffect(
     () => {
       if (!url)
@@ -154,9 +207,19 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
                   ? <VideosTable
                     videos={videos}
                     getRemoveVideoHandler={getRemoveVideoHandler}
+                    getSubstituteVideoHandler={getSubstituteVideoHandler}
                   />
                   : null
               }
+
+              <SubstituteVideoModal
+                opened={substituteModalOpened}
+                onClose={handleSubstituteModalClose}
+                onSubstitute={handleSubstituteVideo}
+                videoTitle={selectedVideoForSubstitution?.snippet.title}
+                isLoading={isLoading}
+                error={substituteError}
+              />
             </>
         }
       </AuthenticationRequiredLayout>
