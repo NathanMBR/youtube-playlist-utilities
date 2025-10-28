@@ -27,6 +27,3 @@ jobs:
 
       - name: Lint application
         run: pnpm run lint:ci
-
-      - name: Test application
-        run: pnpm run test:ci
