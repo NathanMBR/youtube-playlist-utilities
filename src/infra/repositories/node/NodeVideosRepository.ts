@@ -4,15 +4,18 @@ import {
 } from "@/data/models";
 import {
   GetPlaylistVideosRepository,
-  RemovePlaylistVideoRepository
+  RemovePlaylistVideoRepository,
+  SubstitutePlaylistVideoRepository
 } from "@/data/repositories";
 
 export class NodeVideosRepository implements
   GetPlaylistVideosRepository,
-  RemovePlaylistVideoRepository
+  RemovePlaylistVideoRepository,
+  SubstitutePlaylistVideoRepository
 {
   constructor(
-    private readonly youtubePlaylistVideosBaseURL: string
+    private readonly youtubePlaylistVideosBaseURL: string,
+    private readonly youtubeVideosBaseURL: string
   ) {}
 
   async get(request: GetPlaylistVideosRepository.Request): GetPlaylistVideosRepository.Response {
@@ -148,6 +151,137 @@ export class NodeVideosRepository implements
       return {
         success: false,
         error: "NOT_FOUND"
+      };
+
+    return {
+      success: true
+    };
+  }
+
+  async substitute(request: SubstitutePlaylistVideoRepository.Request): SubstitutePlaylistVideoRepository.Response {
+    const {
+      id,
+      substituteId,
+      authToken
+    } = request;
+
+    const getVideoURL = new URL(this.youtubePlaylistVideosBaseURL);
+    getVideoURL.searchParams.set("id", id);
+    getVideoURL.searchParams.set("part", "snippet");
+
+    const getVideoResponse = await fetch(
+      getVideoURL.toString(),
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      }
+    );
+
+    if (getVideoResponse.status === 400)
+      return {
+        success: false,
+        error: "INVALID_ID"
+      };
+
+    if (getVideoResponse.status === 403)
+      return {
+        success: false,
+        error: "UNAUTHORIZED"
+      };
+
+    if (getVideoResponse.status === 404)
+      return {
+        success: false,
+        error: "NOT_FOUND"
+      };
+
+    const videoData = await getVideoResponse.json();
+
+    if (!videoData.items || videoData.items.length === 0)
+      return {
+        success: false,
+        error: "NOT_FOUND"
+      };
+
+    const originalVideo = videoData.items[0];
+    const { position, playlistId } = originalVideo.snippet;
+
+    const checkSubstituteURL = new URL(this.youtubeVideosBaseURL);
+    checkSubstituteURL.searchParams.set("id", substituteId);
+    checkSubstituteURL.searchParams.set("part", "snippet");
+
+    const checkSubstituteResponse = await fetch(
+      checkSubstituteURL.toString(),
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      }
+    );
+
+    if (!checkSubstituteResponse.ok)
+      return {
+        success: false,
+        error: "SUBSTITUTE_NOT_FOUND"
+      };
+
+    const substituteVideoData = await checkSubstituteResponse.json();
+
+    if (!substituteVideoData.items || substituteVideoData.items.length === 0)
+      return {
+        success: false,
+        error: "SUBSTITUTE_NOT_FOUND"
+      };
+
+    const removeResponse = await this.remove({ id, authToken });
+
+    if (!removeResponse.success)
+      return removeResponse;
+
+    const insertURL = new URL(this.youtubePlaylistVideosBaseURL);
+
+    const insertBody = {
+      snippet: {
+        playlistId,
+        position,
+        resourceId: {
+          kind: "youtube#video",
+          videoId: substituteId
+        }
+      }
+    };
+
+    const insertResponse = await fetch(
+      insertURL.toString() + "?part=snippet",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(insertBody)
+      }
+    );
+
+    if (insertResponse.status === 400)
+      return {
+        success: false,
+        error: "INVALID_SUBSTITUTE_ID"
+      };
+
+    if (insertResponse.status === 403)
+      return {
+        success: false,
+        error: "UNAUTHORIZED"
+      };
+
+    if (insertResponse.status === 404)
+      return {
+        success: false,
+        error: "SUBSTITUTE_NOT_FOUND"
       };
 
     return {
