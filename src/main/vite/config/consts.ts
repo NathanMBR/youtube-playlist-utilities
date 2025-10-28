@@ -4,3 +4,4 @@ export const GOOGLE_OAUTH_REDIRECT_URL="http://localhost:4172/auth/callback/rust
 export const GOOGLE_OAUTH_SCOPES="https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/youtube";
 export const GOOGLE_OAUTH_USER_INFO_URL="https://www.googleapis.com/userinfo/v2/me";
 export const YOUTUBE_BASE_PLAYLIST_ITEMS_URL="https://www.googleapis.com/youtube/v3/playlistItems";
+export const YOUTUBE_BASE_VIDEOS_URL="https://www.googleapis.com/youtube/v3/videos";
