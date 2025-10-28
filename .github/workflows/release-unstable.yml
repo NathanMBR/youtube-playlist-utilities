@@ -1,9 +1,12 @@
 name: Unstable Release Workflow
 on:
-  workflow_run:
-    workflows: [Code Quality Workflow]
-    types: [completed]
-    branches: [development]
+  push:
+    branches:
+      - development
+
+  pull_request:
+    branches:
+      - development
 
 jobs:
   publish:
@@ -15,7 +18,6 @@ jobs:
         platform: [macos-latest, ubuntu-20.04, windows-latest]
 
     runs-on: ${{ matrix.platform }}
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v3
