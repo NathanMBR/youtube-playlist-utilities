@@ -205,6 +205,7 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
               {
                 videos
                   ? <VideosTable
+                    noVideosMessage="This playlist doesn't have unavailable videos."
                     videos={videos}
                     getRemoveVideoHandler={getRemoveVideoHandler}
                     getSubstituteVideoHandler={getSubstituteVideoHandler}

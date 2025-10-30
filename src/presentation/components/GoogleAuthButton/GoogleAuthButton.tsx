@@ -1,6 +1,6 @@
 import { Button } from "@mantine/core";
-import { useState } from "react";
 import { shell } from "@tauri-apps/api";
+import { useState } from "react";
 
 import { GoogleIcon } from "./GoogleIcon";
 
@@ -16,7 +16,10 @@ export const GoogleAuthButton = (props: GoogleAuthButtonProps) => {
   const handleClick = () => {
     setIsLoading(true);
 
-    shell.open(href);
+    if (!!window.__TAURI__)
+      return shell.open(href);
+
+    window.location.href = href;
   };
 
   const buttonIcon = <GoogleIcon />;

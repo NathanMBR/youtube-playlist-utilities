@@ -12,6 +12,7 @@ import {
 import { Video } from "@/domain/models";
 
 export type VideosTableProps = {
+  noVideosMessage: string;
   videos: Array<Video>;
   getRemoveVideoHandler: (videoId: string) => () => void;
   getSubstituteVideoHandler: (videoId: string) => () => void;
@@ -20,6 +21,7 @@ export type VideosTableProps = {
 
 export const VideosTable = (props: VideosTableProps) => {
   const {
+    noVideosMessage,
     videos,
     getRemoveVideoHandler,
     getSubstituteVideoHandler
@@ -27,9 +29,7 @@ export const VideosTable = (props: VideosTableProps) => {
 
   if (videos.length <= 0)
     return (
-      <Text mt={16}>
-        This playlist doesn&apos;t have unavailable videos.
-      </Text>
+      <Text mt={16}>{noVideosMessage}</Text>
     );
 
   return (

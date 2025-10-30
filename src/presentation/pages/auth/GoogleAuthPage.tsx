@@ -62,13 +62,15 @@ export const GoogleAuthPage = (props: GoogleAuthPageProps) => {
 
   useEffect(
     () => {
-      const unlistenAuthCallback = event.listen(
-        "google-auth-callback",
-        (callbackData: event.Event<string>) => {
-          const urlHash = new URL(callbackData.payload).hash;
-          window.location.href = "/auth/callback" + urlHash;
-        }
-      );
+      let unlistenAuthCallback: Promise<event.UnlistenFn> | null = null;
+      if (window.__TAURI__)
+        unlistenAuthCallback = event.listen(
+          "google-auth-callback",
+          (callbackData: event.Event<string>) => {
+            const urlHash = new URL(callbackData.payload).hash;
+            window.location.href = "/auth/callback" + urlHash;
+          }
+        );
 
       if (authCallback) {
         setIsLoadingAuthProfile(true);
@@ -88,7 +90,8 @@ export const GoogleAuthPage = (props: GoogleAuthPageProps) => {
       }
 
       return () => {
-        unlistenAuthCallback.then(unlistenFn => unlistenFn());
+        if (unlistenAuthCallback)
+          unlistenAuthCallback.then(unlistenFn => unlistenFn());
       };
     },
     []

@@ -10,7 +10,8 @@ import {
 import {
   GOOGLE_OAUTH_BASE_URL,
   GOOGLE_OAUTH_CLIENT_ID,
-  GOOGLE_OAUTH_REDIRECT_URL,
+  GOOGLE_OAUTH_REDIRECT_URL_NAVIGATOR,
+  GOOGLE_OAUTH_REDIRECT_URL_RUST,
   GOOGLE_OAUTH_SCOPES,
   GOOGLE_OAUTH_USER_INFO_URL
 } from "@/main/vite/config";
@@ -34,7 +35,9 @@ export const makeGoogleAuthPage = () => {
   const googleOAuth = {
     baseURL: GOOGLE_OAUTH_BASE_URL,
     clientId: GOOGLE_OAUTH_CLIENT_ID,
-    redirectURL: GOOGLE_OAUTH_REDIRECT_URL,
+    redirectURL: !!window.__TAURI__
+      ? GOOGLE_OAUTH_REDIRECT_URL_RUST
+      : GOOGLE_OAUTH_REDIRECT_URL_NAVIGATOR,
     scopes: GOOGLE_OAUTH_SCOPES
   };
 

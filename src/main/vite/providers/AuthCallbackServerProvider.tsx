@@ -18,8 +18,14 @@ export const AuthCallbackServerProvider = (props: AuthCallbackServerProviderProp
 
   useEffect(
     () => {
-      invoke("start_server")
-        .finally(() => setIsLoading(false));
+      if (window.__TAURI__) {
+        invoke("start_server")
+          .finally(() => setIsLoading(false));
+
+        return;
+      }
+
+      setIsLoading(false);
     },
     []
   );

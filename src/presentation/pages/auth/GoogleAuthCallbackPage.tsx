@@ -12,17 +12,18 @@ export const GoogleAuthCallbackPage = (props: GoogleAuthCallbackPageProps) => {
   const { setAuthCallback } = props;
 
   const isAuthCallbackSaved = setAuthCallback.execute();
+  if (!isAuthCallbackSaved)
+    return (
+      <BaseLayout activeOptionId="auth">
+        <Text>ERROR: Authentication callback not saved</Text>
+      </BaseLayout>
+    );
 
-  if (isAuthCallbackSaved)
-    window.location.href = "/auth";
+  window.location.href = "/auth";
 
   return (
     <BaseLayout activeOptionId="auth">
-      {
-        isAuthCallbackSaved
-          ? <LoadingScreen />
-          : <Text>ERROR: Authentication callback not saved</Text>
-      }
+      <LoadingScreen />
     </BaseLayout>
   );
 };
