@@ -1,8 +1,9 @@
 import {
-  Table,
   ActionIcon,
-  Tooltip,
-  Text
+  Box,
+  Table,
+  Text,
+  Tooltip
 } from "@mantine/core";
 import {
   IconTrash,
@@ -34,33 +35,37 @@ export const VideosTable = (props: VideosTableProps) => {
 
   return (
     <Table
-      miw={700}
+      miw={500}
       mt={16}
+      verticalSpacing="sm"
+      striped
     >
       <thead>
         <tr>
+          <th style={{ textAlign: "center", width: 64 }}>Position</th>
           <th>Title</th>
-          <th>Playlist position</th>
-          <th>Actions</th>
+          <th style={{ textAlign: "center" }}>Actions</th>
         </tr>
       </thead>
       <tbody>
         {
           videos.map(
             video => <tr key={video.id}>
+              <td style={{ textAlign: "center" }}>{video.snippet.position + 1}</td>
               <td>{video.snippet.title}</td>
-              <td>{video.snippet.position + 1}</td>
               <td>
-                <Tooltip label="Substitute video">
-                  <ActionIcon onClick={getSubstituteVideoHandler(video.id)} mr="xs">
-                    <IconReplace />
-                  </ActionIcon>
-                </Tooltip>
-                <Tooltip label="Remove video">
-                  <ActionIcon onClick={getRemoveVideoHandler(video.id)}>
-                    <IconTrash />
-                  </ActionIcon>
-                </Tooltip>
+                <Box style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
+                  <Tooltip label="Substitute video">
+                    <ActionIcon onClick={getSubstituteVideoHandler(video.id)}>
+                      <IconReplace />
+                    </ActionIcon>
+                  </Tooltip>
+                  <Tooltip label="Remove video">
+                    <ActionIcon onClick={getRemoveVideoHandler(video.id)}>
+                      <IconTrash />
+                    </ActionIcon>
+                  </Tooltip>
+                </Box>
               </td>
             </tr>
           )

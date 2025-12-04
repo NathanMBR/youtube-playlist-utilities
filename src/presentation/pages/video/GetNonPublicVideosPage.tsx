@@ -2,7 +2,10 @@ import {
   useState,
   useEffect
 } from "react";
-import { Title } from "@mantine/core";
+import {
+  LoadingOverlay,
+  Title
+} from "@mantine/core";
 
 import {
   GetAuthCallback,
@@ -17,7 +20,6 @@ import {
 import {
   NonPublicVideosForm,
   VideosTable,
-  LoadingScreen,
   ErrorAlert,
   SubstituteVideoModal
 } from "@/presentation/components";
@@ -58,8 +60,6 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
 
   const executeGetNonPublicVideos = async () => {
     setIsLoading(true);
-    setError("");
-    setVideos(null);
 
     const nonPublicVideosResponse = await getNonPublicVideos.execute(
       {
@@ -79,11 +79,12 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
 
       setError(errorMessages[nonPublicVideosResponse.error]);
       setIsLoading(false);
+      setVideos(null);
       return;
     }
 
     setVideos(nonPublicVideosResponse.data);
-
+    setError("");
     setIsLoading(false);
   };
 
@@ -115,19 +116,18 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
       }
 
       await executeGetNonPublicVideos();
-
-      setIsLoading(false);
     };
   };
 
   const getSubstituteVideoHandler = (videoId: string) => {
     return () => {
       const videoToSubstitute = videos?.find(v => v.id === videoId);
-      if (videoToSubstitute) {
-        setSelectedVideoForSubstitution(videoToSubstitute);
-        setSubstituteModalOpened(true);
-        setSubstituteError("");
-      }
+      if (!videoToSubstitute)
+        return;
+
+      setSelectedVideoForSubstitution(videoToSubstitute);
+      setSubstituteModalOpened(true);
+      setSubstituteError("");
     };
   };
 
@@ -137,6 +137,8 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
     const substituteVideoResponse = await substituteVideo.execute({
       id: selectedVideoForSubstitution.id,
       substituteId: substituteVideoId,
+      position: selectedVideoForSubstitution.snippet.position,
+      playlistId: selectedVideoForSubstitution.snippet.playlistId,
       authToken: authCallback!.accessToken
     });
 
@@ -168,6 +170,8 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
 
   useEffect(
     () => {
+      console.log("url:", url);
+
       if (!url)
         return;
 
@@ -175,6 +179,11 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
     },
     [url]
   );
+
+  useEffect(() => {
+    console.log("videos:");
+    console.log(videos);
+  }, [videos]);
 
   return (
     <BaseLayout activeOptionId="unavailable">
@@ -191,38 +200,36 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
         />
 
         {
-          isLoading
-            ? <LoadingScreen heightProportion={0.5} />
-            : <>
-              {
-                error
-                  ? <ErrorAlert
-                    message={error}
-                    handleCloseAlert={handleCloseErrorAlert}
-                  />
-                  : null
-              }
-              {
-                videos
-                  ? <VideosTable
-                    noVideosMessage="This playlist doesn't have unavailable videos."
-                    videos={videos}
-                    getRemoveVideoHandler={getRemoveVideoHandler}
-                    getSubstituteVideoHandler={getSubstituteVideoHandler}
-                  />
-                  : null
-              }
-
-              <SubstituteVideoModal
-                opened={substituteModalOpened}
-                onClose={handleSubstituteModalClose}
-                onSubstitute={handleSubstituteVideo}
-                videoTitle={selectedVideoForSubstitution?.snippet.title}
-                isLoading={isLoading}
-                error={substituteError}
-              />
-            </>
+          error
+            ? <ErrorAlert
+              message={error}
+              handleCloseAlert={handleCloseErrorAlert}
+            />
+            : null
         }
+
+        <LoadingOverlay visible={isLoading} transitionDuration={250} />
+
+        {
+          videos
+            ? <VideosTable
+              noVideosMessage="This playlist doesn't have unavailable videos."
+              videos={videos}
+              getRemoveVideoHandler={getRemoveVideoHandler}
+              getSubstituteVideoHandler={getSubstituteVideoHandler}
+            />
+            : null
+        }
+
+        <SubstituteVideoModal
+          opened={substituteModalOpened}
+          onClose={handleSubstituteModalClose}
+          onSubstitute={handleSubstituteVideo}
+          videoTitle={selectedVideoForSubstitution?.snippet.title}
+          isLoading={isLoading}
+          error={substituteError}
+        />
+
       </AuthenticationRequiredLayout>
     </BaseLayout>
   );

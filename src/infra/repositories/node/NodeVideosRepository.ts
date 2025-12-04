@@ -162,51 +162,10 @@ export class NodeVideosRepository implements
     const {
       id,
       substituteId,
+      position,
+      playlistId,
       authToken
     } = request;
-
-    const getVideoURL = new URL(this.youtubePlaylistVideosBaseURL);
-    getVideoURL.searchParams.set("id", id);
-    getVideoURL.searchParams.set("part", "snippet");
-
-    const getVideoResponse = await fetch(
-      getVideoURL.toString(),
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${authToken}`
-        }
-      }
-    );
-
-    if (getVideoResponse.status === 400)
-      return {
-        success: false,
-        error: "INVALID_ID"
-      };
-
-    if (getVideoResponse.status === 403)
-      return {
-        success: false,
-        error: "UNAUTHORIZED"
-      };
-
-    if (getVideoResponse.status === 404)
-      return {
-        success: false,
-        error: "NOT_FOUND"
-      };
-
-    const videoData = await getVideoResponse.json();
-
-    if (!videoData.items || videoData.items.length === 0)
-      return {
-        success: false,
-        error: "NOT_FOUND"
-      };
-
-    const originalVideo = videoData.items[0];
-    const { position, playlistId } = originalVideo.snippet;
 
     const checkSubstituteURL = new URL(this.youtubeVideosBaseURL);
     checkSubstituteURL.searchParams.set("id", substituteId);
@@ -221,6 +180,8 @@ export class NodeVideosRepository implements
         }
       }
     );
+
+    console.log("checkSubstituteResponse.status:", checkSubstituteResponse.status);
 
     if (!checkSubstituteResponse.ok)
       return {
@@ -266,6 +227,8 @@ export class NodeVideosRepository implements
       }
     );
 
+    console.log("insertResponse.status:", insertResponse.status);
+
     if (insertResponse.status === 400)
       return {
         success: false,
@@ -283,6 +246,9 @@ export class NodeVideosRepository implements
         success: false,
         error: "SUBSTITUTE_NOT_FOUND"
       };
+
+    const insertResponseBody = await insertResponse.json();
+    console.log("substitute response body:", insertResponseBody);
 
     return {
       success: true

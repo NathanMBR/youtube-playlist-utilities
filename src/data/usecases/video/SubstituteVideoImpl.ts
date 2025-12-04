@@ -10,6 +10,8 @@ export class SubstituteVideoImpl implements SubstituteVideo {
     const {
       id,
       substituteId,
+      position,
+      playlistId,
       authToken
     } = request;
 
@@ -17,6 +19,8 @@ export class SubstituteVideoImpl implements SubstituteVideo {
       {
         id,
         substituteId,
+        position,
+        playlistId,
         authToken
       }
     );

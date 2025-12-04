@@ -4,6 +4,8 @@ export namespace SubstituteVideo {
   export type Request = {
     id: Video["id"];
     substituteId: Video["id"];
+    position: number;
+    playlistId: string;
     authToken: string;
   }
 
