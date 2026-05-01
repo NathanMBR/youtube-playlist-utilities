@@ -14,7 +14,7 @@ jobs:
       tag_name: ${{ steps.get_version.outputs.tag_name }}
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Get app version
         id: get_version
         run: |
@@ -38,7 +38,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Setup Environment Variables
         run: echo "VITE_GOOGLE_OAUTH_CLIENT_ID=${{ secrets.VITE_GOOGLE_OAUTH_CLIENT_ID }}" > .env
       - name: Write Docker build script
@@ -96,7 +96,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
         uses: actions/setup-node@v3

@@ -16,7 +16,7 @@ jobs:
       tag_name: ${{ steps.get_version.outputs.tag_name }}
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Get app version
         id: get_version
         run: |
@@ -41,7 +41,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Setup Environment Variables
         run: echo "VITE_GOOGLE_OAUTH_CLIENT_ID=${{ secrets.VITE_GOOGLE_OAUTH_CLIENT_ID }}" > .env
       - name: Write Docker build script
@@ -99,7 +99,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -122,32 +122,3 @@ jobs:
         with:
           releaseId: ${{ needs.create-release.outputs.release_id }}
 
-  build-macos:
-    needs: [create-release]
-    runs-on: macos-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout repository code
-        uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 22
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      - name: Install Frontend Dependencies
-        run: pnpm install
-      - name: Setup Environment Variables
-        run : |
-          echo "VITE_GOOGLE_OAUTH_CLIENT_ID=${{ secrets.VITE_GOOGLE_OAUTH_CLIENT_ID }}" > .env
-      - name: Run Tauri Action
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          releaseId: ${{ needs.create-release.outputs.release_id }}
