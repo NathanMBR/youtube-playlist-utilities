@@ -84,3 +84,29 @@ pnpm test:ci            # Run tests in CI mode with verbose output
 - Unit tests: `.spec.ts` files alongside implementation files
 - Test coverage enabled by default with `pnpm test`
 - Use Vitest for testing framework
+
+## CI/CD Workflows
+
+Two release workflows live in `.github/workflows/`:
+
+### `release.yml` — Stable releases
+Triggered when the **Code Quality Workflow** completes successfully on `master`.
+
+Jobs (run in this order):
+1. **`create-release`** — reads the app version from `src/main/tauri/tauri.conf.json` (`package.version`), creates a draft GitHub Release tagged `v<VERSION>`, and outputs `release_id` and `tag_name` for the downstream jobs.
+2. **`build-linux`** — runs on `ubuntu-latest`; builds inside a `ubuntu:20.04` Docker container to ensure glibc 2.31 compatibility. Installs Node.js via nvm, pnpm via the official standalone script, and Rust via rustup — all inside the container. Uploads `.deb` and `.AppImage` artifacts from `src/main/tauri/target/release/bundle/` to the release using the GitHub CLI.
+3. **`build-windows`** — runs on `windows-latest`; uses `tauri-apps/tauri-action@v0` with `releaseId` (not `tagName`) to upload artifacts to the already-created release.
+4. **`build-macos`** — runs on `macos-latest`; same approach as `build-windows`.
+
+Jobs 2–4 run in parallel after job 1 completes.
+
+### `release-unstable.yml` — Unstable releases
+Triggered on every push or pull request to `development`.
+
+Same job structure as above, without `build-macos`. The release tag is `v<VERSION>-unstable-<run_id>-<run_attempt>` to guarantee uniqueness per CI run. The release is created as a prerelease (not a draft).
+
+### Design notes
+- The `create-release`-first pattern eliminates the race condition that occurs when multiple jobs try to create the same GitHub Release simultaneously.
+- Passing `releaseId` to `tauri-action` (instead of `tagName`) bypasses its release-creation logic, so it only uploads artifacts.
+- The Docker build script is written to `/tmp/build.sh` on the runner and bind-mounted into the container to avoid shell escaping issues with multi-command `docker run bash -c "..."` calls.
+- A `chown` step after the Docker run restores file ownership so the runner user can read the build artifacts.
