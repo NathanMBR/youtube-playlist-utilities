@@ -181,8 +181,6 @@ export class NodeVideosRepository implements
       }
     );
 
-    console.log("checkSubstituteResponse.status:", checkSubstituteResponse.status);
-
     if (!checkSubstituteResponse.ok)
       return {
         success: false,
@@ -227,8 +225,6 @@ export class NodeVideosRepository implements
       }
     );
 
-    console.log("insertResponse.status:", insertResponse.status);
-
     if (insertResponse.status === 400)
       return {
         success: false,
@@ -246,9 +242,6 @@ export class NodeVideosRepository implements
         success: false,
         error: "SUBSTITUTE_NOT_FOUND"
       };
-
-    const insertResponseBody = await insertResponse.json();
-    console.log("substitute response body:", insertResponseBody);
 
     return {
       success: true

@@ -170,8 +170,6 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
 
   useEffect(
     () => {
-      console.log("url:", url);
-
       if (!url)
         return;
 
@@ -179,11 +177,6 @@ export const GetNonPublicVideosPage = (props: GetNonPublicVideosPageProps) => {
     },
     [url]
   );
-
-  useEffect(() => {
-    console.log("videos:");
-    console.log(videos);
-  }, [videos]);
 
   return (
     <BaseLayout activeOptionId="unavailable">
