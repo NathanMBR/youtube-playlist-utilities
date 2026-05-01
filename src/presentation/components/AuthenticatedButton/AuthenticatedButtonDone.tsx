@@ -59,7 +59,7 @@ export const AuthenticatedButtonDone = (props: AuthenticatedButtonDoneProps) => 
         </Text>
 
         <Text size="xs">
-        Click to logout
+          Click to logout
         </Text>
       </div>
 

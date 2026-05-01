@@ -16,8 +16,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "lint": "tsc --noEmit && eslint --fix",
-    "lint:ci": "tsc --noEmit && eslint",
+    "lint": "tsc --noEmit && eslint --fix .",
+    "lint:ci": "tsc --noEmit && eslint .",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri"
@@ -33,19 +33,22 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.46.2",
-    "react-router-dom": "^6.15.0",
+    "react-router-dom": "^7.14.2",
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@swc/core": "^1.3.81",
     "@tauri-apps/cli": "^1.4.0",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^6.5.0",
-    "@typescript-eslint/parser": "^6.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.59.1",
+    "@typescript-eslint/parser": "^8.59.1",
     "@vitejs/plugin-react-swc": "^3.3.2",
-    "eslint": "^8.48.0",
-    "eslint-plugin-react": "^7.33.2",
+    "eslint": "^10.2.1",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^17.5.0",
     "typescript": "^5.0.2",
     "vite": "^4.4.4"
   },

@@ -1,16 +1,14 @@
 name: Unstable Release Workflow
 on:
-  push:
-    branches:
-      - development
-
-  pull_request:
-    branches:
-      - development
+  workflow_run:
+    workflows: [Code Quality Workflow]
+    types: [completed]
+    branches: [development]
 
 jobs:
   create-release:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write
     outputs:
