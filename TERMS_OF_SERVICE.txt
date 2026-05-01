@@ -1,0 +1,201 @@
+TERMS OF SERVICE
+YouTube Playlist Utilities
+Last updated: May 1, 2026
+
+Please read these Terms of Service ("Terms") carefully before using YouTube
+Playlist Utilities ("the Application"). By installing or using the Application,
+you agree to be bound by these Terms. If you do not agree, do not use the
+Application.
+
+================================================================================
+DEVELOPER CONTACT
+================================================================================
+
+Developer:  Nathan Murillo
+Email:      nathanmurillodeoliveira@gmail.com
+Repository: https://github.com/NathanMBR/youtube-playlist-utilities
+
+================================================================================
+1. DESCRIPTION OF THE APPLICATION
+================================================================================
+
+YouTube Playlist Utilities is a free, open-source desktop application for
+Windows and Linux. It allows you to connect your Google account,
+inspect your YouTube playlists for unavailable or non-public videos, and
+remove or replace those videos at your request.
+
+The Application communicates directly with Google's servers on your behalf.
+It has no backend server of its own and does not store your data outside of
+your local device.
+
+================================================================================
+2. ELIGIBILITY
+================================================================================
+
+You must have a valid Google account and comply with Google's Terms of Service
+(https://policies.google.com/terms) and YouTube's Terms of Service
+(https://www.youtube.com/t/terms) to use the Application. By using the
+Application you represent that you meet these requirements.
+
+================================================================================
+3. GOOGLE API TERMS COMPLIANCE
+================================================================================
+
+The Application accesses YouTube Data through the Google APIs. Your use of
+the Application is therefore also subject to:
+
+  - Google Terms of Service: https://policies.google.com/terms
+  - YouTube Terms of Service: https://www.youtube.com/t/terms
+  - Google API Services User Data Policy:
+    https://developers.google.com/terms/api-services-user-data-policy
+
+In the event of a conflict between these Terms and the Google or YouTube Terms
+of Service, the Google or YouTube Terms of Service shall prevail with respect
+to your use of their services.
+
+================================================================================
+4. PERMITTED USE
+================================================================================
+
+Subject to these Terms, you are permitted to:
+
+  a. Install and use the Application on devices you own or control.
+  b. Access your own YouTube playlists through the Application.
+  c. Remove or substitute videos in playlists you own or manage.
+  d. Review, copy, modify, and redistribute the Application's source code
+     under the terms of the MIT License (see Section 8).
+
+================================================================================
+5. PROHIBITED USE
+================================================================================
+
+You agree not to use the Application to:
+
+  a. Access YouTube playlists or data that you do not have permission to
+     manage.
+  b. Violate any applicable local, national, or international law or
+     regulation.
+  c. Circumvent, disable, or interfere with security features of the
+     Application or of Google's services.
+  d. Automate actions at a rate that violates Google's API usage policies or
+     quota limits.
+  e. Use the Application for any purpose that violates Google's Terms of
+     Service or YouTube's Terms of Service.
+
+================================================================================
+6. GOOGLE ACCOUNT AND AUTHENTICATION
+================================================================================
+
+The Application uses Google OAuth 2.0 to authenticate you. You are solely
+responsible for maintaining the security of your Google account credentials.
+We are not responsible for any loss or damage arising from unauthorized access
+to your Google account.
+
+You may revoke the Application's access to your Google account at any time
+through your Google Account security settings:
+https://myaccount.google.com/permissions
+
+================================================================================
+7. YOUTUBE DATA AND PLAYLIST ACTIONS
+================================================================================
+
+All actions performed on your YouTube playlists through the Application
+(including removing or substituting videos) are permanent and executed through
+the official YouTube Data API on your behalf. We are not responsible for
+accidental or unintended modifications to your playlists resulting from your
+use of the Application.
+
+You are solely responsible for verifying that any action you take within the
+Application — including video removal or substitution — is intended and
+correct before confirming it.
+
+================================================================================
+8. INTELLECTUAL PROPERTY AND OPEN-SOURCE LICENSE
+================================================================================
+
+The Application's source code is released under the MIT License. The full
+license text is available in the LICENSE file in the repository at:
+https://github.com/NathanMBR/youtube-playlist-utilities
+
+The MIT License grants you broad rights to use, copy, modify, merge, publish,
+distribute, sublicense, and sell copies of the Application, subject to the
+conditions stated in that license.
+
+Nothing in these Terms transfers ownership of any Google or YouTube trademarks,
+trade names, or other intellectual property to you. "YouTube" and "Google" are
+trademarks of Google LLC. The Application is an independent project and is not
+affiliated with, endorsed by, or sponsored by Google LLC.
+
+================================================================================
+9. DISCLAIMER OF WARRANTIES
+================================================================================
+
+THE APPLICATION IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+WE DO NOT WARRANT THAT:
+
+  a. THE APPLICATION WILL MEET YOUR REQUIREMENTS OR EXPECTATIONS.
+  b. THE APPLICATION WILL BE UNINTERRUPTED, TIMELY, SECURE, OR ERROR-FREE.
+  c. ANY ERRORS OR DEFECTS IN THE APPLICATION WILL BE CORRECTED.
+  d. THE APPLICATION WILL REMAIN COMPATIBLE WITH FUTURE VERSIONS OF THE
+     GOOGLE APIS OR OPERATING SYSTEMS.
+
+YOUR USE OF THE APPLICATION IS AT YOUR SOLE RISK.
+
+================================================================================
+10. LIMITATION OF LIABILITY
+================================================================================
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL THE
+DEVELOPER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR
+PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF DATA, LOSS OF REVENUE,
+OR LOSS OF GOODWILL, ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF THE
+APPLICATION, EVEN IF THE DEVELOPER HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
+
+THIS LIMITATION APPLIES REGARDLESS OF THE LEGAL THEORY ON WHICH THE CLAIM IS
+BASED, WHETHER IN CONTRACT, TORT, NEGLIGENCE, STRICT LIABILITY, OR OTHERWISE.
+
+================================================================================
+11. TERMINATION
+================================================================================
+
+These Terms remain in effect for as long as you use the Application. You may
+stop using the Application at any time by uninstalling it and revoking its
+access to your Google account.
+
+We reserve the right to discontinue the Application or release new versions
+that change its functionality at any time without notice.
+
+================================================================================
+12. CHANGES TO THESE TERMS
+================================================================================
+
+We may update these Terms from time to time. Material changes will be reflected
+by an updated "Last updated" date at the top of this document and, if
+significant, announced in the Application's GitHub repository release notes at:
+https://github.com/NathanMBR/youtube-playlist-utilities/releases
+
+Your continued use of the Application after any changes constitutes your
+acceptance of the revised Terms.
+
+================================================================================
+13. GOVERNING LAW
+================================================================================
+
+These Terms are governed by and construed in accordance with the laws of
+Brazil, without regard to its conflict of law principles. Any disputes arising
+from these Terms or your use of the Application shall be subject to the
+exclusive jurisdiction of the courts located in Brazil.
+
+================================================================================
+14. CONTACT
+================================================================================
+
+Questions or concerns regarding these Terms may be directed to:
+
+  Nathan Murillo
+  nathanmurillodeoliveira@gmail.com
+  https://github.com/NathanMBR/youtube-playlist-utilities

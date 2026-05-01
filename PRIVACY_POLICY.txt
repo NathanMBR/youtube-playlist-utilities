@@ -1,0 +1,203 @@
+PRIVACY POLICY
+YouTube Playlist Utilities
+Last updated: May 1, 2026
+
+This Privacy Policy describes how YouTube Playlist Utilities ("the Application",
+"we", "us", or "our") handles information when you use our desktop application.
+By using the Application, you agree to the practices described in this policy.
+
+================================================================================
+DEVELOPER CONTACT
+================================================================================
+
+Developer:  Nathan Murillo
+Email:      nathanmurillodeoliveira@gmail.com
+Repository: https://github.com/NathanMBR/youtube-playlist-utilities
+
+================================================================================
+GOOGLE API SERVICES — LIMITED USE DISCLOSURE
+================================================================================
+
+YouTube Playlist Utilities' use of information received from Google APIs adheres
+to the Google API Services User Data Policy, including the Limited Use
+requirements.
+
+  https://developers.google.com/terms/api-services-user-data-policy
+
+Specifically:
+
+  - We use Google API data only to provide and improve the features described
+    in this policy (playlist management directly within the Application).
+  - We do not use Google user data for advertising purposes.
+  - We do not sell Google user data to any third party.
+  - We do not allow any human to read Google user data unless (a) you have
+    given express permission for us to do so, (b) it is necessary for security
+    or compliance with applicable law, or (c) our use is limited to internal
+    operations and the data (including derived data) has been aggregated and
+    anonymized.
+  - We do not transfer Google user data to third parties except as necessary
+    to operate the Application or as required by law.
+
+================================================================================
+1. WHAT DATA WE ACCESS
+================================================================================
+
+To provide its functionality, the Application requests access to the following
+data through your Google account, using the scopes listed below:
+
+Scope: https://www.googleapis.com/auth/userinfo.profile
+  Purpose: Retrieve your basic Google profile information (name and profile
+  picture) so the Application can display your identity while you are signed in.
+  Data accessed: your Google account name, profile picture URL, and Google
+  account ID.
+
+Scope: https://www.googleapis.com/auth/youtube
+  Purpose: Read your YouTube playlists to identify unavailable or non-public
+  videos, and to allow you to remove or substitute those videos from your own
+  playlists.
+  Data accessed: playlist IDs, video IDs, video titles, video descriptions,
+  channel names, privacy status (public / private / unlisted), video thumbnails,
+  and video positions within your playlists.
+
+The Application does not request access to any other Google services, your
+Google contacts, Gmail, Google Drive, or any other personal data beyond what
+is listed above.
+
+================================================================================
+2. HOW WE USE YOUR DATA
+================================================================================
+
+The data accessed through Google APIs is used exclusively for the following
+user-facing features:
+
+  a. Displaying your name and profile picture in the Application interface.
+
+  b. Fetching the contents of a YouTube playlist you specify, so that
+     unavailable or non-public videos can be identified and listed.
+
+  c. Removing a video from your playlist at your explicit request.
+
+  d. Replacing a video in your playlist with a substitute video at your
+     explicit request, preserving the original position.
+
+All data processing occurs locally on your device. No playlist content, video
+metadata, or personal information is transmitted to any server operated by the
+developer.
+
+================================================================================
+3. DATA STORAGE AND RETENTION
+================================================================================
+
+Authentication Token
+  When you sign in with your Google account, Google returns an OAuth 2.0 access
+  token. The Application stores this token in your device's local browser
+  storage (localStorage) within the Application's sandboxed WebView. The token
+  is:
+
+    - Stored only on your local device.
+    - Never transmitted to any server operated by the developer.
+    - Automatically treated as expired and discarded once its validity period
+      ends.
+    - Immediately removed from local storage when you sign out of the
+      Application.
+
+Playlist and Video Data
+  Playlist and video information fetched from the YouTube Data API is held only
+  in the Application's memory while it is running. This data is not written to
+  disk and is not retained between sessions.
+
+No Server-Side Storage
+  The Application has no backend server. We do not receive, store, log, or
+  process any of your data on our infrastructure.
+
+================================================================================
+4. DATA SHARING AND THIRD PARTIES
+================================================================================
+
+We do not sell, rent, share, or otherwise disclose your personal information or
+Google API data to any third party, except in the following limited
+circumstances:
+
+  a. Google LLC: All API calls are made directly from your device to Google's
+     servers. Your use of the Google APIs is also governed by Google's Privacy
+     Policy (https://policies.google.com/privacy) and Google's Terms of Service
+     (https://policies.google.com/terms).
+
+  b. Legal requirements: We may disclose information if required by applicable
+     law, regulation, or valid legal process.
+
+The Application does not integrate any analytics services, advertising networks,
+crash-reporting services, or other third-party tracking tools.
+
+================================================================================
+5. YOUR RIGHTS AND CONTROLS
+================================================================================
+
+You have full control over the data the Application accesses:
+
+  Sign out: Signing out of the Application immediately removes your access
+  token from local storage. The Application will not be able to access your
+  Google data until you sign in again.
+
+  Revoke access: You can revoke the Application's access to your Google
+  account at any time through your Google Account security settings:
+  https://myaccount.google.com/permissions
+  Revoking access immediately invalidates any stored access token.
+
+  Delete local data: Because all data is stored only in the Application's
+  local storage, uninstalling the Application removes all locally stored data,
+  including any cached access tokens.
+
+  Data deletion request: If you believe the Application has retained any of
+  your personal data, contact the developer at nathanmurillodeoliveira@gmail.com
+  to request its deletion.
+
+================================================================================
+6. DATA SECURITY
+================================================================================
+
+We implement the following measures to protect your data:
+
+  - All communication with Google APIs is conducted over HTTPS.
+  - OAuth access tokens are stored only in the Application's sandboxed
+    WebView storage and are not accessible to other applications on your device.
+  - The Application requests only the minimum Google API scopes necessary to
+    provide its features.
+  - No user data is transmitted to or stored on any server operated by the
+    developer.
+
+================================================================================
+7. CHANGES TO THIS PRIVACY POLICY
+================================================================================
+
+We may update this Privacy Policy from time to time. Material changes will be
+reflected by an updated "Last updated" date at the top of this document and, if
+significant, announced in the Application's GitHub repository release notes at:
+https://github.com/NathanMBR/youtube-playlist-utilities/releases
+
+Your continued use of the Application after any changes constitutes your
+acceptance of the revised Privacy Policy.
+
+================================================================================
+8. OPEN SOURCE
+================================================================================
+
+The Application is open-source software licensed under the MIT License. The
+complete source code, including all data-handling logic, is publicly available
+at:
+
+  https://github.com/NathanMBR/youtube-playlist-utilities
+
+You are encouraged to review the source code to verify the data practices
+described in this policy.
+
+================================================================================
+9. CONTACT
+================================================================================
+
+Questions about this Privacy Policy or requests regarding your personal data
+may be directed to:
+
+  Nathan Murillo
+  nathanmurillodeoliveira@gmail.com
+  https://github.com/NathanMBR/youtube-playlist-utilities
