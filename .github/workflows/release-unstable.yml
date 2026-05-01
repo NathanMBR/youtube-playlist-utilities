@@ -67,6 +67,7 @@ jobs:
           export PATH="/root/.cargo/bin:$PATH"
 
           pnpm install
+          export APPIMAGE_EXTRACT_AND_RUN=1
           pnpm tauri build
           EOF
           chmod +x /tmp/build.sh
