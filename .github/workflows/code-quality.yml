@@ -12,7 +12,7 @@ jobs:
   publish:
     name: Linting and testing
     runs-on: ubuntu-latest
-    container: node:18.17.1-alpine3.17
+    container: node:22-alpine
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v3
